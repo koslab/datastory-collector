@@ -3,6 +3,7 @@ import {
     ChevronRight,
     ChevronLeft,
     Edit3,
+    User,
 } from 'lucide-react';
 
 // Import modular components
@@ -12,15 +13,17 @@ import Wizard from './components/Wizard';
 import ManagementView from './components/ManagementView';
 import Sidebar from './components/Sidebar';
 import LiveLogicPreview from './components/LiveLogicPreview';
+import UserProfileModal from './components/UserProfileModal';
 
 const App = () => {
     const [view, setView] = useState('wizard');
-    const [step, setStep] = useState(0);
+    const [step, setStep] = useState(1);
     const [stories, setStories] = useState(() => {
         const saved = localStorage.getItem('datastory_stories');
         return saved ? JSON.parse(saved) : [];
     });
     const [editingId, setEditingId] = useState(null);
+    const [showProfileModal, setShowProfileModal] = useState(false);
 
     const [globalSuggestions, setGlobalSuggestions] = useState(() => {
         const saved = localStorage.getItem('datastory_suggestions');
@@ -34,7 +37,7 @@ const App = () => {
 
     const [userProfile, setUserProfile] = useState(() => {
         const saved = localStorage.getItem('datastory_user_profile');
-        return saved ? JSON.parse(saved) : { fullName: '', email: '', phone: '', role: '' };
+        return saved ? JSON.parse(saved) : { fullName: '', email: '', phone: '', role: '', department: '', company: '' };
     });
     const [currentStory, setCurrentStory] = useState({
         action: 'view an interactive dashboard',
@@ -60,6 +63,13 @@ const App = () => {
     useEffect(() => {
         localStorage.setItem('datastory_user_profile', JSON.stringify(userProfile));
     }, [userProfile]);
+
+    useEffect(() => {
+        const isComplete = userProfile.fullName && userProfile.email && userProfile.role;
+        if (!isComplete) {
+            setShowProfileModal(true);
+        }
+    }, []);
 
     const handleProfileChange = (e) => setUserProfile({ ...userProfile, [e.target.name]: e.target.value });
     const nextStep = () => setStep((s) => s + 1);
@@ -106,10 +116,26 @@ const App = () => {
 
     const saveStory = () => {
         if (editingId) {
-            setStories(stories.map(s => s.id === editingId ? { ...currentStory, id: editingId, submittedBy: userProfile.fullName, userRole: userProfile.role, timestamp: new Date().toLocaleString() } : s));
+            setStories(stories.map(s => s.id === editingId ? {
+                ...currentStory,
+                id: editingId,
+                submittedBy: userProfile.fullName,
+                userRole: userProfile.role,
+                userEmail: userProfile.email,
+                userDepartment: userProfile.department,
+                timestamp: new Date().toLocaleString()
+            } : s));
             setEditingId(null);
         } else {
-            setStories([...stories, { ...currentStory, id: Date.now(), submittedBy: userProfile.fullName, userRole: userProfile.role, timestamp: new Date().toLocaleString() }]);
+            setStories([...stories, {
+                ...currentStory,
+                id: Date.now(),
+                submittedBy: userProfile.fullName,
+                userRole: userProfile.role,
+                userEmail: userProfile.email,
+                userDepartment: userProfile.department,
+                timestamp: new Date().toLocaleString()
+            }]);
         }
         updateGlobalMemory(currentStory);
         setCurrentStory({ action: 'view an interactive dashboard', metrics: [], dimensions: [], filters: [], frequency: 'Daily', value: '', sources: [] });
@@ -126,9 +152,9 @@ const App = () => {
 
     const exportToCSV = () => {
         if (stories.length === 0) return;
-        const headers = ["ID", "Submitted By", "User Role", "Action", "Metrics", "Dimensions", "Filters", "Frequency", "Business Value", "Source Systems"];
+        const headers = ["ID", "Submitted By", "User Role", "Email", "Department", "Action", "Metrics", "Dimensions", "Filters", "Frequency", "Business Value", "Source Systems"];
         const rows = stories.map(s => [
-            s.id, s.submittedBy, s.userRole, s.action,
+            s.id, s.submittedBy, s.userRole, s.userEmail || '', s.userDepartment || '', s.action,
             `"${s.metrics.join(', ')}"`, `"${s.dimensions.join(', ')}"`, `"${s.filters.join(', ')}"`,
             s.frequency, `"${s.value.replace(/"/g, '""')}"`, `"${s.sources.join(', ')}"`
         ]);
@@ -141,7 +167,6 @@ const App = () => {
     };
 
     const canProgress = () => {
-        if (step === 0) return userProfile.fullName && userProfile.role && userProfile.email;
         if (step === 2) return currentStory.metrics.length > 0;
         if (step === 3) return currentStory.dimensions.length > 0;
         if (step === 4) return currentStory.value.length > 5;
@@ -159,7 +184,25 @@ const App = () => {
                 exportToCSV={exportToCSV}
             />
 
-            <div className="flex-1 flex flex-col p-8 md:p-16 overflow-y-auto">
+            <div className="flex-1 flex flex-col p-8 md:p-16 overflow-y-auto relative">
+                <button
+                    onClick={() => setShowProfileModal(true)}
+                    className="absolute top-8 right-8 flex items-center gap-2 bg-white border border-slate-100 px-5 py-3 rounded-2xl shadow-sm hover:shadow-md transition-all group active:scale-95 z-10"
+                >
+                    <div className="w-8 h-8 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600 font-bold text-xs uppercase group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        {userProfile.fullName ? userProfile.fullName.charAt(0).toUpperCase() : <User size={14} />}
+                    </div>
+                    <div className="text-left">
+                        <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-0.5">Profile</div>
+                        <div className="text-xs font-bold text-slate-800 leading-none">{userProfile.fullName || 'Complete Profile'}</div>
+                        {userProfile.fullName && (
+                            <div className="text-[9px] text-slate-400 mt-1 font-medium leading-none">
+                                {userProfile.email} • {userProfile.department}
+                            </div>
+                        )}
+                    </div>
+                </button>
+
                 <div className="max-w-5xl mx-auto w-full">
                     {view === 'wizard' ? (
                         <div className="max-w-2xl mx-auto">
@@ -173,8 +216,6 @@ const App = () => {
                             )}
                             <Wizard
                                 step={step}
-                                userProfile={userProfile}
-                                handleProfileChange={handleProfileChange}
                                 currentStory={currentStory}
                                 setCurrentStory={setCurrentStory}
                                 tempInputs={tempInputs}
@@ -186,7 +227,7 @@ const App = () => {
                                 editingId={editingId}
                             />
                             <div className="mt-16 flex justify-between items-center border-t border-slate-100 pt-10">
-                                {step > 0 && <button onClick={prevStep} className="flex items-center gap-2 text-slate-400 hover:text-slate-800 font-black text-xs uppercase tracking-[0.2em] px-6 py-3 transition-all"><ChevronLeft size={20} /> Previous</button>}
+                                {step > 1 && <button onClick={prevStep} className="flex items-center gap-2 text-slate-400 hover:text-slate-800 font-black text-xs uppercase tracking-[0.2em] px-6 py-3 transition-all"><ChevronLeft size={20} /> Previous</button>}
                                 <div className="flex-1"></div>
                                 {step < 5 && <button onClick={nextStep} disabled={!canProgress()} className={`flex items-center gap-3 bg-slate-900 text-white px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-2xl transition-all ${!canProgress() ? 'opacity-20 cursor-not-allowed' : 'hover:bg-black active:scale-95'}`}>Next Phase <ChevronRight size={20} /></button>}
                             </div>
@@ -209,6 +250,13 @@ const App = () => {
             {view === 'wizard' && (
                 <LiveLogicPreview userProfile={userProfile} currentStory={currentStory} />
             )}
+
+            <UserProfileModal
+                profile={userProfile}
+                onChange={handleProfileChange}
+                onSave={() => setShowProfileModal(false)}
+                isOpen={showProfileModal}
+            />
         </div>
     );
 };

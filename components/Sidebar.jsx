@@ -23,16 +23,19 @@ const Sidebar = ({ view, setView, stories, step, globalSuggestions, exportToCSV 
 
             {view === 'wizard' && (
                 <nav className="flex-1 space-y-6 pt-8 border-t border-slate-800/50">
-                    {['Identity', 'Output', 'Metrics', 'Breakdown', 'Impact', 'Sources'].map((label, idx) => (
-                        <div key={label} className={`flex items-center gap-4 transition-all ${step === idx ? 'text-white' : 'text-slate-500'}`}>
-                            <div className={`w-9 h-9 rounded-2xl flex items-center justify-center text-xs font-black border-2 transition-all ${step === idx ? 'border-indigo-500 bg-indigo-500 text-white scale-110 shadow-lg shadow-indigo-500/20' : step > idx ? 'border-emerald-500 bg-emerald-500 text-white' : 'border-slate-800 bg-slate-800/50'}`}>
-                                {step > idx ? <CheckCircle2 size={16} /> : idx + 1}
+                    {['Output', 'Metrics', 'Breakdown', 'Impact', 'Sources'].map((label, idx) => {
+                        const stepNum = idx + 1;
+                        return (
+                            <div key={label} className={`flex items-center gap-4 transition-all ${step === stepNum ? 'text-white' : 'text-slate-50'}`}>
+                                <div className={`w-9 h-9 rounded-2xl flex items-center justify-center text-xs font-black border-2 transition-all ${step === stepNum ? 'border-indigo-500 bg-indigo-500 text-white scale-110 shadow-lg shadow-indigo-500/20' : step > stepNum ? 'border-emerald-500 bg-emerald-500 text-white' : 'border-slate-800 bg-slate-800/50 text-slate-500'}`}>
+                                    {step > stepNum ? <CheckCircle2 size={16} /> : stepNum}
+                                </div>
+                                <span className={`text-xs font-black uppercase tracking-widest ${step === stepNum ? 'opacity-100' : 'opacity-40'}`}>
+                                    {label}
+                                </span>
                             </div>
-                            <span className={`text-xs font-black uppercase tracking-widest ${step === idx ? 'opacity-100' : 'opacity-40'}`}>
-                                {label}
-                            </span>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </nav>
             )}
 

@@ -48,7 +48,7 @@ const LiveLogicPreview = ({ userProfile, currentStory }) => {
                     </div>
 
                     <div>
-                        <span className="">Filterable by </span>
+                        <span className="">filterable by </span>
                         {currentStory.filters.length > 0 ? (
                             <span className="text-white font-bold">{currentStory.filters.join(', ')}</span>
                         ) : (
