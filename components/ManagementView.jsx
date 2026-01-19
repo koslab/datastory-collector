@@ -22,40 +22,54 @@ const ManagementView = ({ stories, setView, setEditingId, setStep, startEditStor
             ) : (
                 <div className="grid grid-cols-1 gap-6">
                     {stories.map((s) => (
-                        <div key={s.id} className="bg-white border border-slate-200 rounded-[2rem] p-8 shadow-sm hover:shadow-xl hover:border-indigo-100 transition-all group relative">
-                            <div className="flex justify-between items-start mb-6">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-600 border border-indigo-100">
-                                        <FileText size={24} />
-                                    </div>
-                                    <div>
-                                        <p className="text-lg font-black text-slate-800 truncate max-w-lg leading-tight">As a {s.userRole}, I want to {s.action}</p>
-                                        <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest mt-1">Persona: {s.submittedBy} • {s.timestamp}</p>
-                                    </div>
+                        <div key={s.id} className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm hover:shadow-md hover:border-indigo-100 transition-all group relative flex items-start gap-5">
+                            {/* Icon */}
+                            <div className="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center text-white shrink-0 shadow-sm mt-1">
+                                <FileText size={18} />
+                            </div>
+
+                            {/* Content */}
+                            <div className="flex-1 min-w-0">
+                                <div className="text-base leading-snug font-medium text-slate-500 font-sans">
+                                    <span>As a </span>
+                                    <span className="text-slate-900 font-bold">{s.userRole}</span>
+                                    <span>, I want to </span>
+                                    <span className="text-indigo-600 font-bold">{s.action}</span>
+                                    <span> showing </span>
+                                    <span className="text-slate-900 font-bold">{s.metrics.join(', ')}</span>
+                                    <span> over </span>
+                                    <span className="text-slate-900 font-bold">{s.dimensions.join(', ')}</span>
+                                    {s.filters && s.filters.length > 0 && (
+                                        <>
+                                            <span>, filterable by </span>
+                                            <span className="text-slate-900 font-bold">{s.filters.join(', ')}</span>
+                                        </>
+                                    )}
+                                    <span>, updated </span>
+                                    <span className="text-indigo-600 font-bold">{s.frequency}</span>
+                                    <span> so that </span>
+                                    <span className="text-slate-900 font-bold italic">"{s.value}"</span>
+                                    <span>.</span>
                                 </div>
-                                <div className="flex gap-2">
-                                    <button onClick={() => startEditStory(s)} className="p-2.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-colors border border-transparent hover:border-indigo-100" title="Edit Story"><Edit3 size={18} /></button>
-                                    <button onClick={() => setStories(stories.filter(i => i.id !== s.id))} className="p-2.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors border border-transparent hover:border-red-100" title="Delete Story"><Trash2 size={18} /></button>
+
+                                {/* Sources Pill List */}
+                                <div className="mt-3 flex flex-wrap gap-2 items-center">
+                                    {s.sources && s.sources.length > 0 && s.sources.map((src, i) => (
+                                        <span key={i} className="px-3 py-1 bg-indigo-50 text-indigo-600 rounded-lg text-[9px] font-black border border-indigo-100 uppercase tracking-widest">
+                                            {src}
+                                        </span>
+                                    ))}
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-xs">
-                                <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                                    <p className="text-slate-400 font-black mb-1.5 uppercase tracking-widest text-[9px]">KPIs</p>
-                                    <p className="text-slate-800 font-bold leading-tight">{s.metrics.join('; ')}</p>
-                                </div>
-                                <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                                    <p className="text-slate-400 font-black mb-1.5 uppercase tracking-widest text-[9px]">Granularity</p>
-                                    <p className="text-slate-800 font-bold leading-tight">{s.dimensions.join(', ')}</p>
-                                </div>
-                                <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                                    <p className="text-slate-400 font-black mb-1.5 uppercase tracking-widest text-[9px]">Freshness</p>
-                                    <p className="text-slate-800 font-bold leading-tight uppercase">{s.frequency}</p>
-                                </div>
-                                <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                                    <p className="text-slate-400 font-black mb-1.5 uppercase tracking-widest text-[9px]">Sources</p>
-                                    <p className="text-slate-800 font-bold leading-tight">{s.sources.join(', ') || 'N/A'}</p>
-                                </div>
+                            {/* Actions */}
+                            <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+                                <button onClick={() => startEditStory(s)} className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors border border-transparent hover:border-indigo-100" title="Edit Story">
+                                    <Edit3 size={14} />
+                                </button>
+                                <button onClick={() => setStories(stories.filter(i => i.id !== s.id))} className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors border border-transparent hover:border-red-100" title="Delete Story">
+                                    <Trash2 size={14} />
+                                </button>
                             </div>
                         </div>
                     ))}
