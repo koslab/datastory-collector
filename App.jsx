@@ -279,7 +279,7 @@ ${u.stories.map(s => {
             <div className={`
                 fixed inset-y-0 left-0 z-40 w-80 transform transition-transform duration-300 ease-in-out lg:shadow-none
                 ${isSidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'}
-                lg:relative lg:translate-x-0 lg:transform-none lg:block 
+                lg:relative lg:translate-x-0 lg:transform-none lg:flex lg:flex-col
             `}>
                 <Sidebar
                     view={view}
@@ -291,8 +291,8 @@ ${u.stories.map(s => {
                 />
             </div>
 
-            <div className="flex-1 flex flex-col xl:flex-row h-screen overflow-hidden">
-                <div className="flex-1 flex flex-col p-4 md:p-16 overflow-y-auto relative">
+            <div className="flex-1 flex flex-col xl:flex-row">
+                <div className="flex-1 flex flex-col p-4 md:p-16 relative">
                     <button
                         onClick={() => setShowProfileModal(true)}
                         className="w-full mb-8 pl-16 md:pl-5 md:mb-0 md:w-auto md:absolute md:top-8 md:right-8 flex items-center gap-2 bg-white border border-slate-100 px-5 py-3 rounded-2xl shadow-sm hover:shadow-md transition-all group active:scale-95 z-10"

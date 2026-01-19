@@ -5,8 +5,8 @@ const LiveLogicPreview = ({ userProfile, currentStory }) => {
     const [isExpanded, setIsExpanded] = useState(true);
 
     return (
-        <div className={`w-full xl:w-[450px] bg-slate-50 border-t xl:border-l xl:border-t-0 border-slate-200 shrink-0 flex flex-col justify-center transition-all ${isExpanded ? 'p-4 md:p-8' : 'p-0'}`}>
-            <div className={`bg-slate-900 transition-all duration-300 shadow-2xl relative overflow-hidden text-lg leading-relaxed font-medium text-slate-400 font-sans ${isExpanded ? 'rounded-[2.5rem] p-6 md:p-10' : 'rounded-none p-4 cursor-pointer hover:bg-slate-800'}`} onClick={() => !isExpanded && setIsExpanded(true)}>
+        <div className={`w-full xl:w-[450px] bg-slate-50 border-t xl:border-l xl:border-t-0 border-slate-200 shrink-0 flex flex-col transition-all ${isExpanded ? 'p-4 md:p-8' : 'p-0'}`}>
+            <div className={`bg-slate-900 transition-all duration-300 shadow-2xl relative overflow-hidden text-lg leading-relaxed font-medium text-slate-400 font-sans sticky top-8 ${isExpanded ? 'rounded-[2.5rem] p-6 md:p-10' : 'rounded-none p-4 cursor-pointer hover:bg-slate-800'}`} onClick={() => !isExpanded && setIsExpanded(true)}>
                 {/* Header */}
                 <div
                     className={`flex items-center justify-between ${isExpanded ? 'mb-4 md:mb-10 cursor-pointer' : 'mb-0'}`}
