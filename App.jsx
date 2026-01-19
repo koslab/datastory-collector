@@ -26,8 +26,7 @@ const App = () => {
         const saved = localStorage.getItem('datastory_suggestions');
         const defaultValue = {
             metrics: ['Total Revenue', 'Net Margin', 'Customer Acquisition Cost', 'Churn Rate', 'Lifetime Value', 'Inventory Turnover', 'Daily Active Users'],
-            dimensions: ['Region', 'Product Category', 'Date', 'Sales Channel', 'Store Location', 'Customer Segment', 'Device Type'],
-            filters: ['Fiscal Period', 'Region Code', 'Promotion Type', 'Subscription Tier'],
+            dimensions: ['Region', 'Product Category', 'Date', 'Sales Channel', 'Store Location', 'Customer Segment', 'Device Type', 'Fiscal Period', 'Region Code', 'Promotion Type', 'Subscription Tier'],
             sources: ['Salesforce', 'SAP S/4HANA', 'Google Analytics 4', 'Microsoft Dynamics', 'Stripe Payments', 'AWS S3 Logs']
         };
         return saved ? JSON.parse(saved) : defaultValue;
@@ -87,10 +86,20 @@ const App = () => {
     const updateGlobalMemory = (story) => {
         setGlobalSuggestions(prev => {
             const updated = { ...prev };
-            ['metrics', 'dimensions', 'filters', 'sources'].forEach(field => {
-                const uniqueValues = new Set([...prev[field], ...(story[field] || [])]);
-                updated[field] = Array.from(uniqueValues).sort();
-            });
+
+            // Metrics
+            updated.metrics = Array.from(new Set([...prev.metrics, ...(story.metrics || [])])).sort();
+
+            // Dimensions (merging both dimensions and filters into the dimensions pool)
+            updated.dimensions = Array.from(new Set([
+                ...prev.dimensions,
+                ...(story.dimensions || []),
+                ...(story.filters || [])
+            ])).sort();
+
+            // Sources
+            updated.sources = Array.from(new Set([...prev.sources, ...(story.sources || [])])).sort();
+
             return updated;
         });
     };

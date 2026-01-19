@@ -15,23 +15,26 @@ const LibraryView = ({ globalSuggestions, setView }) => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {Object.entries(globalSuggestions).map(([category, items]) => (
-                    <div key={category} className="bg-white border border-slate-200 rounded-[2rem] p-8 shadow-sm">
-                        <div className="flex items-center gap-3 mb-6">
-                            <div className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl">
-                                {category === 'metrics' ? <BarChart3 size={20} /> : category === 'dimensions' ? <Layers size={20} /> : category === 'sources' ? <Database size={20} /> : <ListFilter size={20} />}
+                {['metrics', 'dimensions', 'sources'].map((category) => {
+                    const items = globalSuggestions[category] || [];
+                    return (
+                        <div key={category} className="bg-white border border-slate-200 rounded-[2rem] p-8 shadow-sm">
+                            <div className="flex items-center gap-3 mb-6">
+                                <div className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl">
+                                    {category === 'metrics' ? <BarChart3 size={20} /> : category === 'dimensions' ? <Layers size={20} /> : <Database size={20} />}
+                                </div>
+                                <h3 className="font-black text-slate-800 uppercase tracking-widest text-lg">{category}</h3>
                             </div>
-                            <h3 className="font-black text-slate-800 uppercase tracking-widest text-lg">{category}</h3>
+                            <div className="flex flex-wrap gap-2">
+                                {items.length > 0 ? items.map((item, idx) => (
+                                    <span key={idx} className="px-4 py-2 bg-slate-50 text-slate-700 text-xs font-bold rounded-xl border border-slate-100 shadow-sm">
+                                        {item}
+                                    </span>
+                                )) : <p className="text-slate-400 text-sm italic">No entries yet.</p>}
+                            </div>
                         </div>
-                        <div className="flex flex-wrap gap-2">
-                            {items.length > 0 ? items.map((item, idx) => (
-                                <span key={idx} className="px-4 py-2 bg-slate-50 text-slate-700 text-xs font-bold rounded-xl border border-slate-100 shadow-sm">
-                                    {item}
-                                </span>
-                            )) : <p className="text-slate-400 text-sm italic">No entries yet.</p>}
-                        </div>
-                    </div>
-                ))}
+                    )
+                })}
             </div>
         </div>
     );

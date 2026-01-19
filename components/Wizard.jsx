@@ -79,7 +79,7 @@ const Wizard = ({
                     </div>
                     <div className="space-y-6">
                         <MultiInput label="Breakdown Dimensions" field="dimensions" placeholder="e.g. Region, Product" tempInputs={tempInputs} setTempInputs={setTempInputs} addItem={addItem} removeItem={removeItem} currentItems={currentStory.dimensions} suggestions={globalSuggestions.dimensions} />
-                        <MultiInput label="Dynamic Filters" field="filters" placeholder="e.g. Date Range, Segment" tempInputs={tempInputs} setTempInputs={setTempInputs} addItem={addItem} removeItem={removeItem} currentItems={currentStory.filters} suggestions={globalSuggestions.filters} />
+                        <MultiInput label="Dynamic Filters" field="filters" placeholder="e.g. Date Range, Segment" tempInputs={tempInputs} setTempInputs={setTempInputs} addItem={addItem} removeItem={removeItem} currentItems={currentStory.filters} suggestions={globalSuggestions.dimensions} />
                     </div>
                 </div>
             );
