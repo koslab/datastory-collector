@@ -76,10 +76,16 @@ const Sidebar = ({ view, setView, stories, step, globalSuggestions, onViewYaml }
                     <Download size={18} /> View YAML
                 </button>
 
-                <div className="pt-4 text-[10px] text-slate-600 font-bold tracking-widest text-center">
-                    <a href="https://kagesenshi.org" target="_blank" rel="noopener noreferrer" className="hover:text-indigo-400 transition-colors">
+                <div className="pt-4 flex flex-col items-center gap-1">
+                    <a href="https://kagesenshi.org" target="_blank" rel="noopener noreferrer" className="text-[10px] font-bold tracking-widest text-slate-600 hover:text-indigo-400 transition-colors">
                         (c) kagesenshi.org
                     </a>
+                    <div className="text-[10px] font-bold tracking-widest text-slate-600 flex items-center gap-1">
+                        <span>Licensed under</span>
+                        <a href="https://www.gnu.org/licenses/agpl-3.0.en.html#license-text" target="_blank" rel="noopener noreferrer" className="hover:text-indigo-400 transition-colors">
+                            AGPL v3
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
