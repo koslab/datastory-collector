@@ -1,7 +1,7 @@
 import React from 'react';
 import { Database, Plus, ListFilter, CheckCircle2, History, BookOpen, Download } from 'lucide-react';
 
-const Sidebar = ({ view, setView, stories, step, globalSuggestions, exportToCSV }) => {
+const Sidebar = ({ view, setView, stories, step, globalSuggestions, onViewYaml }) => {
     return (
         <div className="w-full md:w-80 bg-slate-900 text-white p-10 flex flex-col shrink-0 shadow-2xl z-20 h-screen overflow-y-auto">
             <div className="mb-12">
@@ -60,8 +60,12 @@ const Sidebar = ({ view, setView, stories, step, globalSuggestions, exportToCSV 
                     </button>
                 </div>
 
-                <button onClick={exportToCSV} disabled={stories.length === 0} className="w-full flex items-center justify-center gap-3 py-4 bg-emerald-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest transition-all disabled:opacity-20 disabled:grayscale hover:bg-emerald-700 active:scale-95 shadow-lg shadow-emerald-900/20">
-                    <Download size={18} /> Export Backlog
+                <button
+                    onClick={onViewYaml}
+                    disabled={stories.length === 0}
+                    className="w-full flex items-center justify-center gap-3 py-4 bg-emerald-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest transition-all disabled:opacity-20 disabled:grayscale hover:bg-emerald-700 active:scale-95 shadow-lg shadow-emerald-900/20"
+                >
+                    <Download size={18} /> View YAML
                 </button>
             </div>
         </div>

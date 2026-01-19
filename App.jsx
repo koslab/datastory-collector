@@ -14,6 +14,7 @@ import ManagementView from './components/ManagementView';
 import Sidebar from './components/Sidebar';
 import LiveLogicPreview from './components/LiveLogicPreview';
 import UserProfileModal from './components/UserProfileModal';
+import YamlPreview from './components/YamlPreview';
 
 const App = () => {
     const [view, setView] = useState('wizard');
@@ -24,6 +25,7 @@ const App = () => {
     });
     const [editingId, setEditingId] = useState(null);
     const [showProfileModal, setShowProfileModal] = useState(false);
+    const [yamlSource, setYamlSource] = useState('');
 
     const [globalSuggestions, setGlobalSuggestions] = useState(() => {
         const saved = localStorage.getItem('datastory_suggestions');
@@ -63,6 +65,61 @@ const App = () => {
     useEffect(() => {
         localStorage.setItem('datastory_user_profile', JSON.stringify(userProfile));
     }, [userProfile]);
+
+    useEffect(() => {
+        if (stories.length === 0) {
+            setYamlSource('');
+            return;
+        }
+
+        const escape = (str) => {
+            if (!str) return '""';
+            const s = str.toString();
+            if (s.includes('\n') || s.includes('"') || s.includes(':')) {
+                return `"${s.replace(/"/g, '\\"')}"`;
+            }
+            return s;
+        };
+
+        const listItems = (arr, indent = '  ') => {
+            if (!arr || arr.length === 0) return ' []';
+            return '\n' + arr.map(item => `${indent}- ${escape(item)}`).join('\n');
+        };
+
+        const grouped = stories.reduce((acc, s) => {
+            const key = `${s.userEmail || ''}|${s.submittedBy || ''}|${s.userRole || ''}`;
+            if (!acc[key]) {
+                acc[key] = {
+                    userRole: s.userRole,
+                    userName: s.submittedBy,
+                    userEmail: s.userEmail,
+                    userDepartment: s.userDepartment,
+                    stories: []
+                };
+            }
+            acc[key].stories.push(s);
+            return acc;
+        }, {});
+
+        const yamlContent = Object.values(grouped).map(u => {
+            return `- userRole: ${escape(u.userRole)}
+  userName: ${escape(u.userName)}
+  userEmail: ${escape(u.userEmail)}
+  userDepartment: ${escape(u.userDepartment)}
+  userStories:
+${u.stories.map(s => `    - id: ${s.id}
+      action: ${escape(s.action)}
+      metrics:${listItems(s.metrics, '      ')}
+      dimensions:${listItems(s.dimensions, '      ')}
+      filters:${listItems(s.filters, '      ')}
+      frequency: ${escape(s.frequency)}
+      businessValue: ${escape(s.value)}
+      sourceSystems:${listItems(s.sources, '      ')}
+      timestamp: ${escape(s.timestamp)}`).join('\n')}`;
+        }).join('\n');
+
+        setYamlSource(yamlContent);
+    }, [stories]);
 
     useEffect(() => {
         const isComplete = userProfile.fullName && userProfile.email && userProfile.role;
@@ -150,21 +207,6 @@ const App = () => {
         setView('wizard');
     };
 
-    const exportToCSV = () => {
-        if (stories.length === 0) return;
-        const headers = ["ID", "Submitted By", "User Role", "Email", "Department", "Action", "Metrics", "Dimensions", "Filters", "Frequency", "Business Value", "Source Systems"];
-        const rows = stories.map(s => [
-            s.id, s.submittedBy, s.userRole, s.userEmail || '', s.userDepartment || '', s.action,
-            `"${s.metrics.join(', ')}"`, `"${s.dimensions.join(', ')}"`, `"${s.filters.join(', ')}"`,
-            s.frequency, `"${s.value.replace(/"/g, '""')}"`, `"${s.sources.join(', ')}"`
-        ]);
-        const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement("a");
-        link.setAttribute("href", URL.createObjectURL(blob));
-        link.setAttribute("download", `DataStory_Backlog_${new Date().toISOString().split('T')[0]}.csv`);
-        link.click();
-    };
 
     const canProgress = () => {
         if (step === 2) return currentStory.metrics.length > 0;
@@ -181,7 +223,7 @@ const App = () => {
                 stories={stories}
                 step={step}
                 globalSuggestions={globalSuggestions}
-                exportToCSV={exportToCSV}
+                onViewYaml={() => setView('yaml')}
             />
 
             <div className="flex-1 flex flex-col xl:flex-row h-screen overflow-hidden">
@@ -235,6 +277,8 @@ const App = () => {
                             </div>
                         ) : view === 'library' ? (
                             <LibraryView globalSuggestions={globalSuggestions} setView={setView} />
+                        ) : view === 'yaml' ? (
+                            <YamlPreview content={yamlSource} onClose={() => setView('manage')} />
                         ) : (
                             <ManagementView
                                 stories={stories}
