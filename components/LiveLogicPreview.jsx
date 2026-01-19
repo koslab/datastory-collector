@@ -65,7 +65,7 @@ const LiveLogicPreview = ({ userProfile, currentStory }) => {
 
                     <div>
                         {currentStory.value ? (
-                            <span className="text-white font-bold italic">"{currentStory.value}"</span>
+                            <span className="text-white font-bold">{currentStory.value}</span>
                         ) : (
                             <span className="text-slate-600">______</span>
                         )}

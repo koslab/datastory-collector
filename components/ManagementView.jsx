@@ -48,7 +48,7 @@ const ManagementView = ({ stories, setView, setEditingId, setStep, startEditStor
                                     <span>, updated </span>
                                     <span className="text-indigo-600 font-bold">{s.frequency}</span>
                                     <span> so that </span>
-                                    <span className="text-slate-900 font-bold italic">"{s.value}"</span>
+                                    <span className="text-slate-900 font-bold">{s.value}</span>
                                     <span>.</span>
                                 </div>
 
