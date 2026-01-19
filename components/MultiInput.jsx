@@ -40,6 +40,17 @@ const MultiInput = ({
     return (
         <div className="space-y-3 relative" ref={containerRef}>
             <label className="block text-sm font-bold text-slate-700 uppercase tracking-tight">{label}</label>
+            <div className="flex flex-wrap gap-2">
+                {currentItems.map((item, idx) => (
+                    <span key={idx} className="inline-flex items-center gap-1 px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-full text-xs font-bold border border-indigo-100 shadow-sm">
+                        {item}
+                        <button onClick={() => removeItem(field, idx)} className="hover:text-red-500 transition-colors ml-1">
+                            <Trash2 size={12} />
+                        </button>
+                    </span>
+                ))}
+            </div>
+
             <div className="flex gap-2">
                 <div className="relative flex-1">
                     <input
@@ -84,17 +95,6 @@ const MultiInput = ({
                 >
                     <Plus size={20} />
                 </button>
-            </div>
-
-            <div className="flex flex-wrap gap-2">
-                {currentItems.map((item, idx) => (
-                    <span key={idx} className="inline-flex items-center gap-1 px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-full text-xs font-bold border border-indigo-100 shadow-sm">
-                        {item}
-                        <button onClick={() => removeItem(field, idx)} className="hover:text-red-500 transition-colors ml-1">
-                            <Trash2 size={12} />
-                        </button>
-                    </span>
-                ))}
             </div>
         </div>
     );
