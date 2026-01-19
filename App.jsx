@@ -16,17 +16,27 @@ import LiveLogicPreview from './components/LiveLogicPreview';
 const App = () => {
     const [view, setView] = useState('wizard');
     const [step, setStep] = useState(0);
-    const [stories, setStories] = useState([]);
+    const [stories, setStories] = useState(() => {
+        const saved = localStorage.getItem('datastory_stories');
+        return saved ? JSON.parse(saved) : [];
+    });
     const [editingId, setEditingId] = useState(null);
 
-    const [globalSuggestions, setGlobalSuggestions] = useState({
-        metrics: ['Total Revenue', 'Net Margin', 'Customer Acquisition Cost', 'Churn Rate', 'Lifetime Value', 'Inventory Turnover', 'Daily Active Users'],
-        dimensions: ['Region', 'Product Category', 'Date', 'Sales Channel', 'Store Location', 'Customer Segment', 'Device Type'],
-        filters: ['Fiscal Period', 'Region Code', 'Promotion Type', 'Subscription Tier'],
-        sources: ['Salesforce', 'SAP S/4HANA', 'Google Analytics 4', 'Microsoft Dynamics', 'Stripe Payments', 'AWS S3 Logs']
+    const [globalSuggestions, setGlobalSuggestions] = useState(() => {
+        const saved = localStorage.getItem('datastory_suggestions');
+        const defaultValue = {
+            metrics: ['Total Revenue', 'Net Margin', 'Customer Acquisition Cost', 'Churn Rate', 'Lifetime Value', 'Inventory Turnover', 'Daily Active Users'],
+            dimensions: ['Region', 'Product Category', 'Date', 'Sales Channel', 'Store Location', 'Customer Segment', 'Device Type'],
+            filters: ['Fiscal Period', 'Region Code', 'Promotion Type', 'Subscription Tier'],
+            sources: ['Salesforce', 'SAP S/4HANA', 'Google Analytics 4', 'Microsoft Dynamics', 'Stripe Payments', 'AWS S3 Logs']
+        };
+        return saved ? JSON.parse(saved) : defaultValue;
     });
 
-    const [userProfile, setUserProfile] = useState({ fullName: '', email: '', phone: '', role: '' });
+    const [userProfile, setUserProfile] = useState(() => {
+        const saved = localStorage.getItem('datastory_user_profile');
+        return saved ? JSON.parse(saved) : { fullName: '', email: '', phone: '', role: '' };
+    });
     const [currentStory, setCurrentStory] = useState({
         action: 'view an interactive dashboard',
         metrics: [],
@@ -38,6 +48,19 @@ const App = () => {
     });
 
     const [tempInputs, setTempInputs] = useState({ metric: '', dimension: '', filter: '', source: '' });
+
+    // Persistence Effects
+    useEffect(() => {
+        localStorage.setItem('datastory_stories', JSON.stringify(stories));
+    }, [stories]);
+
+    useEffect(() => {
+        localStorage.setItem('datastory_suggestions', JSON.stringify(globalSuggestions));
+    }, [globalSuggestions]);
+
+    useEffect(() => {
+        localStorage.setItem('datastory_user_profile', JSON.stringify(userProfile));
+    }, [userProfile]);
 
     const handleProfileChange = (e) => setUserProfile({ ...userProfile, [e.target.name]: e.target.value });
     const nextStep = () => setStep((s) => s + 1);
