@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Copy, Check, ArrowLeft, FileText } from 'lucide-react';
+import { Copy, Check, ArrowLeft, FileText, Mail } from 'lucide-react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { materialOceanic } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
-const YamlPreview = ({ content, onClose }) => {
+const YamlPreview = ({ content, onClose, userProfile }) => {
     const [copied, setCopied] = useState(false);
 
     const handleCopy = async () => {
@@ -14,6 +14,28 @@ const YamlPreview = ({ content, onClose }) => {
         } catch (err) {
             console.error('Failed to copy!', err);
         }
+    };
+
+    const handleEmail = () => {
+        const subject = encodeURIComponent("DataStory Backlog YAML");
+        const userName = userProfile?.fullName || 'User';
+        const department = userProfile?.department;
+        const company = userProfile?.company;
+        const role = userProfile?.role;
+
+        let intro = `I am ${userName}`;
+        if (role) intro += `, ${role}`;
+        if (department) intro += ` from ${department}`;
+        if (company) intro += ` at ${company}`;
+        intro += ".";
+
+        const emailBody = `Hi,
+
+${intro} Please find the DataStory backlog YAML below:
+
+${content}`;
+        const body = encodeURIComponent(emailBody);
+        window.location.href = `mailto:?subject=${subject}&body=${body}`;
     };
 
     return (
@@ -32,7 +54,13 @@ const YamlPreview = ({ content, onClose }) => {
             </div>
 
             <div className="relative group">
-                <div className="absolute right-4 top-4 z-10">
+                <div className="absolute right-4 top-4 z-10 flex gap-2">
+                    <button
+                        onClick={handleEmail}
+                        className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest shadow-lg transition-all bg-white text-slate-800 hover:bg-slate-50"
+                    >
+                        <Mail size={14} /> Email
+                    </button>
                     <button
                         onClick={handleCopy}
                         className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest shadow-lg transition-all ${copied

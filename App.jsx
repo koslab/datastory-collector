@@ -343,7 +343,7 @@ ${u.stories.map(s => {
                         ) : view === 'library' ? (
                             <LibraryView globalSuggestions={globalSuggestions} setView={setView} />
                         ) : view === 'yaml' ? (
-                            <YamlPreview content={yamlSource} onClose={() => setView('manage')} />
+                            <YamlPreview content={yamlSource} userProfile={userProfile} onClose={() => setView('manage')} />
                         ) : view === 'matrix' ? (
                             <EDWBusMatrix stories={stories} setView={setView} />
                         ) : (
