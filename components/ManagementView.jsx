@@ -1,7 +1,10 @@
-import React from 'react';
-import { Plus, FileText, Trash2, Edit3 } from 'lucide-react';
+import React, { useState } from 'react';
+import { Plus, FileText, Trash2, Edit3, Database } from 'lucide-react';
+import StarSchemaView from './StarSchemaView';
 
 const ManagementView = ({ stories, setView, setEditingId, setStep, startEditStory, setStories }) => {
+    const [selectedStoryForSchema, setSelectedStoryForSchema] = useState(null);
+
     return (
         <div className="animate-in fade-in duration-500 space-y-8">
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 border-b pb-6">
@@ -74,6 +77,10 @@ const ManagementView = ({ stories, setView, setEditingId, setStep, startEditStor
 
                             {/* Actions */}
                             <div className="w-full md:w-auto flex flex-row gap-3 md:gap-1 md:opacity-0 md:group-hover:opacity-100 transition-opacity shrink-0 mt-4 pt-4 border-t border-slate-100 md:mt-0 md:pt-0 md:border-none">
+                                <button onClick={() => setSelectedStoryForSchema(s)} className="flex-1 md:flex-none flex items-center justify-center gap-2 p-3 md:p-1.5 text-slate-600 md:text-slate-400 hover:text-indigo-600 bg-slate-50 md:bg-transparent hover:bg-indigo-50 rounded-xl md:rounded-lg transition-colors border border-slate-200 md:border-transparent hover:border-indigo-100" title="View Star Schema">
+                                    <Database size={16} />
+                                    <span className="md:hidden text-xs font-black uppercase tracking-wider">Schema</span>
+                                </button>
                                 <button onClick={() => startEditStory(s)} className="flex-1 md:flex-none flex items-center justify-center gap-2 p-3 md:p-1.5 text-slate-600 md:text-slate-400 hover:text-indigo-600 bg-slate-50 md:bg-transparent hover:bg-indigo-50 rounded-xl md:rounded-lg transition-colors border border-slate-200 md:border-transparent hover:border-indigo-100" title="Edit Story">
                                     <Edit3 size={16} />
                                     <span className="md:hidden text-xs font-black uppercase tracking-wider">Edit</span>
@@ -86,6 +93,12 @@ const ManagementView = ({ stories, setView, setEditingId, setStep, startEditStor
                         </div>
                     ))}
                 </div>
+            )}
+            {selectedStoryForSchema && (
+                <StarSchemaView
+                    story={selectedStoryForSchema}
+                    onClose={() => setSelectedStoryForSchema(null)}
+                />
             )}
         </div>
     );
