@@ -13,8 +13,8 @@ const UserProfileModal = ({ profile, onChange, onSave, isOpen }) => {
                     <div className="inline-flex items-center justify-center w-14 h-14 rounded-[1.5rem] bg-indigo-600 text-white shadow-xl shadow-indigo-100 mb-4 group transition-transform hover:scale-105">
                         <User size={28} className="group-hover:animate-pulse" />
                     </div>
-                    <h2 className="text-2xl font-black text-slate-800 uppercase tracking-tight mb-1">Tell us about you</h2>
-                    <p className="text-slate-400 text-sm font-medium italic">Welcome to DataStory. Please tell us who you are to begin.</p>
+                    <h2 className="text-2xl font-black text-slate-800 uppercase tracking-tight mb-1">Set Up Your Profile</h2>
+                    <p className="text-slate-500 text-sm font-medium italic px-4">Help us personalize your experience. This information will be used to attribute your stories and contact you for clarifications.</p>
                 </div>
 
                 <div className="p-8 space-y-3">
@@ -104,12 +104,13 @@ const UserProfileModal = ({ profile, onChange, onSave, isOpen }) => {
                         <label className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">
                             <Layers size={12} className="text-indigo-400" /> System Module
                         </label>
+                        <p className="text-[10px] text-slate-400 font-medium italic ml-1">The functional area you primarily work in (e.g., Sales, Finance, HR).</p>
                         <input
                             name="systemModule"
                             value={profile.systemModule}
                             onChange={onChange}
                             className="w-full px-5 py-3 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 font-bold transition-all placeholder:text-slate-300"
-                            placeholder="Finance, HR, etc."
+                            placeholder="e.g., Marketing Operations"
                         />
                     </div>
 

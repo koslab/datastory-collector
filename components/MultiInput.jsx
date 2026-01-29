@@ -14,7 +14,8 @@ const MultiInput = ({
     addItem,
     removeItem,
     currentItems,
-    suggestions = []
+    suggestions = [],
+    description
 }) => {
     const [isFocused, setIsFocused] = useState(false);
     const containerRef = useRef(null);
@@ -39,7 +40,12 @@ const MultiInput = ({
 
     return (
         <div className="space-y-3 relative" ref={containerRef}>
-            <label className="block text-sm font-bold text-slate-700 uppercase tracking-tight">{label}</label>
+            <div className="space-y-1">
+                <label className="block text-sm font-bold text-slate-700 uppercase tracking-tight">{label}</label>
+                {description && (
+                    <p className="text-xs text-slate-400 font-medium italic leading-relaxed">{description}</p>
+                )}
+            </div>
             <div className="flex flex-wrap gap-2">
                 {currentItems.map((item, idx) => (
                     <span key={idx} className="inline-flex items-center gap-1 px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-full text-xs font-bold border border-indigo-100 shadow-sm">

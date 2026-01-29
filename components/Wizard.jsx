@@ -36,9 +36,20 @@ const Wizard = ({
                 <div className="space-y-6 animate-in fade-in duration-500">
                     <div className="border-b pb-4">
                         <h2 className="text-2xl font-black text-slate-800 uppercase tracking-tight">Step 2: ... showing ...</h2>
-                        <p className="text-slate-500 font-medium italic">Select the metric(s) you need to measure.</p>
+                        <p className="text-slate-500 font-medium italic">What is the specific thing you want to see or measure?</p>
                     </div>
-                    <MultiInput label="Primary Metrics" field="metrics" placeholder="Search or add metrics..." tempInputs={tempInputs} setTempInputs={setTempInputs} addItem={addItem} removeItem={removeItem} currentItems={currentStory.metrics} suggestions={globalSuggestions.metrics} />
+                    <MultiInput
+                        label="Primary Metrics"
+                        field="metrics"
+                        placeholder="e.g., Total Revenue, Number of New Customers, Churn Rate"
+                        description="The numerical values you want to track. Think 'What number am I looking for?'"
+                        tempInputs={tempInputs}
+                        setTempInputs={setTempInputs}
+                        addItem={addItem}
+                        removeItem={removeItem}
+                        currentItems={currentStory.metrics}
+                        suggestions={globalSuggestions.metrics}
+                    />
                 </div>
             );
         case 3:
@@ -46,11 +57,33 @@ const Wizard = ({
                 <div className="space-y-8 animate-in fade-in duration-500">
                     <div className="border-b pb-4">
                         <h2 className="text-2xl font-black text-slate-800 uppercase tracking-tight">Step 3: ... over ... filterable by ... </h2>
-                        <p className="text-slate-500 font-medium italic">Pick the dimensions to group and filter by.</p>
+                        <p className="text-slate-500 font-medium italic">How do you want to break down or filter this information?</p>
                     </div>
                     <div className="space-y-6">
-                        <MultiInput label="Breakdown Dimensions" field="dimensions" placeholder="e.g. Region, Product" tempInputs={tempInputs} setTempInputs={setTempInputs} addItem={addItem} removeItem={removeItem} currentItems={currentStory.dimensions} suggestions={globalSuggestions.dimensions} />
-                        <MultiInput label="Dynamic Filters" field="filters" placeholder="e.g. Date Range, Segment" tempInputs={tempInputs} setTempInputs={setTempInputs} addItem={addItem} removeItem={removeItem} currentItems={currentStory.filters} suggestions={globalSuggestions.dimensions} />
+                        <MultiInput
+                            label="Breakdown Dimensions"
+                            field="dimensions"
+                            placeholder="e.g., Region, Product Category, Sales Rep"
+                            description="How you want to group your data. Think 'I want to see metrics BY...' (e.g., BY Region)."
+                            tempInputs={tempInputs}
+                            setTempInputs={setTempInputs}
+                            addItem={addItem}
+                            removeItem={removeItem}
+                            currentItems={currentStory.dimensions}
+                            suggestions={globalSuggestions.dimensions}
+                        />
+                        <MultiInput
+                            label="Dynamic Filters"
+                            field="filters"
+                            placeholder="e.g., Date Range, VIP Status, Active vs. Inactive"
+                            description="The toggle options you need to narrow down the view. Think 'I want to be able to FILTER out everything EXCEPT...'"
+                            tempInputs={tempInputs}
+                            setTempInputs={setTempInputs}
+                            addItem={addItem}
+                            removeItem={removeItem}
+                            currentItems={currentStory.filters}
+                            suggestions={globalSuggestions.dimensions}
+                        />
                     </div>
                 </div>
             );
@@ -64,6 +97,7 @@ const Wizard = ({
                     <div className="space-y-4">
                         <div className="space-y-2">
                             <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Granularity</label>
+                            <p className="text-[10px] text-slate-400 font-medium italic leading-relaxed">The level of detail required for each data point (e.g., daily totals vs. individual transaction records).</p>
                             <select className="w-full px-4 py-3 border rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 bg-white font-bold" value={currentStory.granularity} onChange={(e) => setCurrentStory({ ...currentStory, granularity: e.target.value })}>
                                 <option value="">(Unspecified)</option>
                                 <option>Individual records</option><option>Hourly</option><option>Daily</option><option>Weekly</option><option>Monthly</option><option>Quarterly</option><option>Yearly</option>
@@ -71,16 +105,21 @@ const Wizard = ({
                         </div>
                         <div className="space-y-2">
                             <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Refresh Frequency</label>
+                            <p className="text-[10px] text-slate-400 font-medium italic leading-relaxed">How often the data should be updated in the system (e.g., in real-time or just once a day).</p>
                             <select className="w-full px-4 py-3 border rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 bg-white font-bold" value={currentStory.frequency} onChange={(e) => setCurrentStory({ ...currentStory, frequency: e.target.value })}>
                                 <option>Real-time</option><option>Hourly</option><option>Daily</option><option>Weekly</option><option>Monthly</option>
                             </select>
                         </div>
                         <div className="space-y-2">
                             <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Purpose / Business Value</label>
-                            <textarea className="w-full px-4 py-3 border rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 h-32 font-medium leading-relaxed" placeholder="I can..." value={currentStory.value} onChange={(e) => setCurrentStory({ ...currentStory, value: e.target.value })} />
+                            <p className="text-[10px] text-slate-400 font-medium italic">Describe how this data helps you make better decisions or solve a problem.</p>
+                            <textarea className="w-full px-4 py-3 border rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 h-32 font-medium leading-relaxed" placeholder="Briefly explain: I can use this to [action] which will result in [benefit]..." value={currentStory.value} onChange={(e) => setCurrentStory({ ...currentStory, value: e.target.value })} />
                         </div>
                         <div className="space-y-4">
-                            <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Operational Dependency</label>
+                            <div className="space-y-1">
+                                <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Operational Dependency</label>
+                                <p className="text-[10px] text-slate-400 font-medium italic">How critical is this data to your daily work?</p>
+                            </div>
                             <div className="flex flex-col gap-2">
                                 <div className="flex gap-2">
                                     {[1, 2, 3, 4, 5].map((rating) => (
@@ -120,10 +159,21 @@ const Wizard = ({
             return (
                 <div className="space-y-6 animate-in fade-in duration-500">
                     <div className="border-b pb-4">
-                        <h2 className="text-2xl font-black text-slate-800 uppercase tracking-tight">Step 5: Implementation Sources</h2>
-                        <p className="text-slate-500 font-medium italic">Map these requirements to your technical landscape.</p>
+                        <h2 className="text-2xl font-black text-slate-800 uppercase tracking-tight">Step 5: Where is this data?</h2>
+                        <p className="text-slate-500 font-medium italic">If you know where this information lives today, let us know.</p>
                     </div>
-                    <MultiInput label="Source Systems" field="sources" placeholder="Identify source platforms..." tempInputs={tempInputs} setTempInputs={setTempInputs} addItem={addItem} removeItem={removeItem} currentItems={currentStory.sources} suggestions={globalSuggestions.sources} />
+                    <MultiInput
+                        label="Source Systems"
+                        field="sources"
+                        placeholder="e.g., Salesforce, Google Analytics, Excel Spreadsheet, legacy DB"
+                        description="The applications or databases where this data originates."
+                        tempInputs={tempInputs}
+                        setTempInputs={setTempInputs}
+                        addItem={addItem}
+                        removeItem={removeItem}
+                        currentItems={currentStory.sources}
+                        suggestions={globalSuggestions.sources}
+                    />
                     <div className="pt-6">
                         <button onClick={saveStory} className="w-full py-4 bg-indigo-600 text-white rounded-2xl font-black text-lg hover:bg-indigo-700 shadow-xl shadow-indigo-200 transition-all flex items-center justify-center gap-2 active:scale-95">
                             <CheckCircle2 size={24} />
