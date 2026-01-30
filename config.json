@@ -1,0 +1,39 @@
+{
+    "actions": [
+        "view an interactive dashboard",
+        "generate a scheduled PDF report",
+        "download raw data in Excel",
+        "access via self-service BI (Power BI/Tableau)",
+        "receive automated Slack/Email alerts"
+    ],
+    "metrics": [
+        "Total Revenue",
+        "Net Margin",
+        "Customer Acquisition Cost",
+        "Churn Rate",
+        "Lifetime Value",
+        "Inventory Turnover",
+        "Daily Active Users"
+    ],
+    "dimensions": [
+        "Region",
+        "Product Category",
+        "Date",
+        "Sales Channel",
+        "Store Location",
+        "Customer Segment",
+        "Device Type",
+        "Fiscal Period",
+        "Region Code",
+        "Promotion Type",
+        "Subscription Tier"
+    ],
+    "sources": [
+        "Salesforce",
+        "SAP S/4HANA",
+        "Google Analytics 4",
+        "Microsoft Dynamics",
+        "Stripe Payments",
+        "AWS S3 Logs"
+    ]
+}

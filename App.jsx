@@ -18,6 +18,7 @@ import LiveLogicPreview from './components/LiveLogicPreview';
 import UserProfileModal from './components/UserProfileModal';
 import YamlPreview from './components/YamlPreview';
 import EDWBusMatrix from './components/EDWBusMatrix';
+import config from './config.json';
 
 const App = () => {
     const [view, setView] = useState('wizard');
@@ -33,11 +34,7 @@ const App = () => {
 
     const [globalSuggestions, setGlobalSuggestions] = useState(() => {
         const saved = localStorage.getItem('datastory_suggestions');
-        const defaultValue = {
-            metrics: ['Total Revenue', 'Net Margin', 'Customer Acquisition Cost', 'Churn Rate', 'Lifetime Value', 'Inventory Turnover', 'Daily Active Users'],
-            dimensions: ['Region', 'Product Category', 'Date', 'Sales Channel', 'Store Location', 'Customer Segment', 'Device Type', 'Fiscal Period', 'Region Code', 'Promotion Type', 'Subscription Tier'],
-            sources: ['Salesforce', 'SAP S/4HANA', 'Google Analytics 4', 'Microsoft Dynamics', 'Stripe Payments', 'AWS S3 Logs']
-        };
+        const defaultValue = config;
         return saved ? JSON.parse(saved) : defaultValue;
     });
 
@@ -337,6 +334,7 @@ ${s.granularity ? `      granularity: ${escape(s.granularity)}` : ''}
                                     addItem={addItem}
                                     removeItem={removeItem}
                                     globalSuggestions={globalSuggestions}
+                                    config={config}
                                     saveStory={saveStory}
                                     editingId={editingId}
                                 />

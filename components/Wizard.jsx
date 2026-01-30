@@ -11,6 +11,7 @@ const Wizard = ({
     addItem,
     removeItem,
     globalSuggestions,
+    config,
     saveStory,
     editingId
 }) => {
@@ -23,7 +24,7 @@ const Wizard = ({
                         <p className="text-slate-500 font-medium italic">Choose how you will consume this data.</p>
                     </div>
                     <div className="grid grid-cols-1 gap-3">
-                        {['view an interactive dashboard', 'generate a scheduled PDF report', 'download raw data in Excel', 'access via self-service BI (Power BI/Tableau)', 'receive automated Slack/Email alerts'].map((opt) => (
+                        {config.actions.map((opt) => (
                             <button key={opt} onClick={() => setCurrentStory({ ...currentStory, action: opt })} className={`text-left p-5 rounded-2xl border-2 transition-all shadow-sm ${currentStory.action === opt ? 'border-indigo-600 bg-indigo-50 text-indigo-700 font-black' : 'border-slate-100 hover:border-indigo-200 bg-white text-slate-600 font-bold'}`}>
                                 {opt.charAt(0).toUpperCase() + opt.slice(1)}
                             </button>
