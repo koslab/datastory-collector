@@ -35,5 +35,18 @@
         "Microsoft Dynamics",
         "Stripe Payments",
         "AWS S3 Logs"
+    ],
+    "modules": [
+        "Sales",
+        "Finance",
+        "HR",
+        "Marketing",
+        "Operations",
+        "Supply Chain",
+        "Customer Service",
+        "IT",
+        "Legal",
+        "Engineering",
+        "Production"
     ]
 }

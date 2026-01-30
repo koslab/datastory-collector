@@ -4,7 +4,7 @@ import { User, Mail, Phone, Briefcase, CheckCircle2, Building2, MapPin, Layers }
 const UserProfileModal = ({ profile, onChange, onSave, isOpen }) => {
     if (!isOpen) return null;
 
-    const isComplete = profile.fullName && profile.email && profile.role && profile.department && profile.company && profile.systemModule;
+    const isComplete = profile.fullName && profile.email && profile.role && profile.department && profile.company;
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300">
@@ -98,20 +98,6 @@ const UserProfileModal = ({ profile, onChange, onSave, isOpen }) => {
                                 placeholder="Acme Inc."
                             />
                         </div>
-                    </div>
-
-                    <div className="space-y-1.5">
-                        <label className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">
-                            <Layers size={12} className="text-indigo-400" /> System Module
-                        </label>
-                        <p className="text-[10px] text-slate-400 font-medium italic ml-1">The functional area you primarily work in (e.g., Sales, Finance, HR).</p>
-                        <input
-                            name="systemModule"
-                            value={profile.systemModule}
-                            onChange={onChange}
-                            className="w-full px-5 py-3 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 font-bold transition-all placeholder:text-slate-300"
-                            placeholder="e.g., Marketing Operations"
-                        />
                     </div>
 
                     <button

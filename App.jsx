@@ -40,7 +40,7 @@ const App = () => {
 
     const [userProfile, setUserProfile] = useState(() => {
         const saved = localStorage.getItem('datastory_user_profile');
-        return saved ? JSON.parse(saved) : { fullName: '', email: '', phone: '', role: '', department: '', company: '', systemModule: '' };
+        return saved ? JSON.parse(saved) : { fullName: '', email: '', phone: '', role: '', department: '', company: '' };
     });
     const [currentStory, setCurrentStory] = useState({
         action: 'view an interactive dashboard',
@@ -51,10 +51,11 @@ const App = () => {
         granularity: '',
         value: '',
         importance: 0,
-        sources: []
+        sources: [],
+        modules: []
     });
 
-    const [tempInputs, setTempInputs] = useState({ metric: '', dimension: '', filter: '', source: '' });
+    const [tempInputs, setTempInputs] = useState({ metric: '', dimension: '', filter: '', source: '', module: '' });
 
     // Persistence Effects
     useEffect(() => {
@@ -112,14 +113,13 @@ const App = () => {
         };
 
         const grouped = stories.reduce((acc, s) => {
-            const key = `${s.userEmail || ''}|${s.submittedBy || ''}|${s.userRole || ''}|${s.userSystemModule || ''}`;
+            const key = `${s.userEmail || ''}|${s.submittedBy || ''}|${s.userRole || ''}`;
             if (!acc[key]) {
                 acc[key] = {
                     userRole: s.userRole,
                     userName: s.submittedBy,
                     userEmail: s.userEmail,
                     userDepartment: s.userDepartment,
-                    userSystemModule: s.userSystemModule,
                     stories: []
                 };
             }
@@ -128,11 +128,10 @@ const App = () => {
         }, {});
 
         const yamlContent = Object.values(grouped).map(u => {
-            return `- userRole: ${escape(u.userRole)}
-  userName: ${escape(u.userName)}
+            return `- userName: ${escape(u.userName)}
   userEmail: ${escape(u.userEmail)}
+  userRole: ${escape(u.userRole)}
   userDepartment: ${escape(u.userDepartment)}
-  systemModule: ${escape(u.userSystemModule)}
   userStories:
 ${u.stories.map(s => {
                 const isoTime = getIsoTimestamp(s.timestamp);
@@ -141,6 +140,7 @@ ${u.stories.map(s => {
 
                 return `    - id: ${s.id}
       action: ${escape(s.action)}
+      systemModules:${listItems(s.modules, '      ')}
       metrics:${listItems(s.metrics, '      ')}
       dimensions:${listItems(s.dimensions, '      ')}
       filters:${listItems(s.filters, '      ')}
@@ -215,7 +215,6 @@ ${s.granularity ? `      granularity: ${escape(s.granularity)}` : ''}
                 userRole: userProfile.role,
                 userEmail: userProfile.email,
                 userDepartment: userProfile.department,
-                userSystemModule: userProfile.systemModule,
                 timestamp: new Date().toISOString()
             } : s));
             setEditingId(null);
@@ -227,12 +226,11 @@ ${s.granularity ? `      granularity: ${escape(s.granularity)}` : ''}
                 userRole: userProfile.role,
                 userEmail: userProfile.email,
                 userDepartment: userProfile.department,
-                userSystemModule: userProfile.systemModule,
                 timestamp: new Date().toISOString()
             }]);
         }
         updateGlobalMemory(currentStory);
-        setCurrentStory({ action: 'view an interactive dashboard', metrics: [], dimensions: [], filters: [], frequency: 'Daily', granularity: '', value: '', importance: 0, sources: [] });
+        setCurrentStory({ action: 'view an interactive dashboard', metrics: [], dimensions: [], filters: [], frequency: 'Daily', granularity: '', value: '', importance: 0, sources: [], modules: [] });
         setStep(1);
         setView('manage');
     };

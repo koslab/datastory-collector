@@ -111,6 +111,18 @@ const Wizard = ({
                                 <option>Real-time</option><option>Hourly</option><option>Daily</option><option>Weekly</option><option>Monthly</option>
                             </select>
                         </div>
+                        <MultiInput
+                            label="Functional Modules"
+                            field="modules"
+                            placeholder="e.g., Sales, Finance, HR"
+                            description="The functional areas or systems this data story relates to."
+                            tempInputs={tempInputs}
+                            setTempInputs={setTempInputs}
+                            addItem={addItem}
+                            removeItem={removeItem}
+                            currentItems={currentStory.modules}
+                            suggestions={config.modules}
+                        />
                         <div className="space-y-2">
                             <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Purpose / Business Value</label>
                             <p className="text-[10px] text-slate-400 font-medium italic">Describe how this data helps you make better decisions or solve a problem.</p>
