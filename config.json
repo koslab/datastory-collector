@@ -48,5 +48,8 @@
         "Legal",
         "Engineering",
         "Production"
-    ]
+    ],
+    "branding": {
+        "logo": ""
+    }
 }

@@ -298,6 +298,17 @@ ${s.granularity ? `      granularity: ${escape(s.granularity)}` : ''}
                 <div className="flex-1 flex flex-col p-4 md:p-16 relative">
 
                     <div className="max-w-5xl mx-auto w-full">
+                        {/* Branding Logo */}
+                        {config.branding?.logo && (
+                            <div className="mb-12 flex justify-start">
+                                <img
+                                    src={config.branding.logo}
+                                    alt="Branding Logo"
+                                    className="max-h-12 object-contain"
+                                />
+                            </div>
+                        )}
+
                         {view === 'wizard' ? (
                             <div className="max-w-2xl mx-auto">
                                 {editingId && (
@@ -347,7 +358,10 @@ ${s.granularity ? `      granularity: ${escape(s.granularity)}` : ''}
                 </div>
 
                 {view === 'wizard' && (
-                    <LiveLogicPreview userProfile={userProfile} currentStory={currentStory} />
+                    <LiveLogicPreview
+                        userProfile={userProfile}
+                        currentStory={currentStory}
+                    />
                 )}
             </div>
 
