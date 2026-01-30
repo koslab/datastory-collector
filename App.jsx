@@ -291,28 +291,13 @@ ${s.granularity ? `      granularity: ${escape(s.granularity)}` : ''}
                     step={step}
                     globalSuggestions={globalSuggestions}
                     onViewYaml={() => { setView('yaml'); setIsSidebarOpen(false); }}
+                    userProfile={userProfile}
+                    setShowProfileModal={setShowProfileModal}
                 />
             </div>
 
             <div className="flex-1 flex flex-col xl:flex-row">
                 <div className="flex-1 flex flex-col p-4 md:p-16 relative">
-                    <button
-                        onClick={() => setShowProfileModal(true)}
-                        className="w-full mb-8 pl-16 md:pl-5 md:mb-0 md:w-auto md:absolute md:top-8 md:right-8 flex items-center gap-2 bg-white border border-slate-100 px-5 py-3 rounded-2xl shadow-sm hover:shadow-md transition-all group active:scale-95 z-10"
-                    >
-                        <div className="w-8 h-8 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600 font-bold text-xs uppercase group-hover:bg-indigo-600 group-hover:text-white transition-colors shrink-0">
-                            {userProfile.fullName ? userProfile.fullName.charAt(0).toUpperCase() : <User size={14} />}
-                        </div>
-                        <div className="text-left overflow-hidden">
-                            <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-0.5 whitespace-nowrap overflow-hidden text-ellipsis">Profile</div>
-                            <div className="text-xs font-bold text-slate-800 leading-none whitespace-nowrap overflow-hidden text-ellipsis">{userProfile.fullName || 'Complete Profile'}</div>
-                            {userProfile.fullName && (
-                                <div className="text-[9px] text-slate-400 mt-1 font-medium leading-none whitespace-nowrap overflow-hidden text-ellipsis">
-                                    {userProfile.email}
-                                </div>
-                            )}
-                        </div>
-                    </button>
 
                     <div className="max-w-5xl mx-auto w-full">
                         {view === 'wizard' ? (

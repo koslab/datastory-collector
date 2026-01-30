@@ -1,7 +1,7 @@
 import React from 'react';
-import { Database, Plus, ListFilter, CheckCircle2, History, BookOpen, Download, Grid } from 'lucide-react';
+import { Database, Plus, ListFilter, CheckCircle2, History, BookOpen, Download, Grid, User } from 'lucide-react';
 
-const Sidebar = ({ view, setView, stories, step, globalSuggestions, onViewYaml }) => {
+const Sidebar = ({ view, setView, stories, step, globalSuggestions, onViewYaml, userProfile, setShowProfileModal }) => {
     return (
         <div className="w-full md:w-80 bg-slate-900 text-white p-10 flex flex-col shrink-0 shadow-2xl z-20 h-screen lg:h-auto lg:min-h-full overflow-y-auto lg:overflow-visible">
             <div className="mb-12">
@@ -74,6 +74,24 @@ const Sidebar = ({ view, setView, stories, step, globalSuggestions, onViewYaml }
                     className="w-full flex items-center justify-center gap-3 py-4 bg-emerald-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest transition-all disabled:opacity-20 disabled:grayscale hover:bg-emerald-700 active:scale-95 shadow-lg shadow-emerald-900/20"
                 >
                     <Download size={18} /> View YAML
+                </button>
+
+                <button
+                    onClick={() => setShowProfileModal(true)}
+                    className="w-full flex items-center gap-3 bg-white/5 border border-white/5 px-5 py-3 rounded-2xl hover:bg-white/10 transition-all group active:scale-95"
+                >
+                    <div className="w-8 h-8 rounded-xl bg-indigo-600/20 flex items-center justify-center text-indigo-400 font-bold text-xs uppercase group-hover:bg-indigo-600 group-hover:text-white transition-colors shrink-0">
+                        {userProfile.fullName ? userProfile.fullName.charAt(0).toUpperCase() : <User size={14} />}
+                    </div>
+                    <div className="text-left overflow-hidden">
+                        <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none mb-0.5 whitespace-nowrap overflow-hidden text-ellipsis">Profile</div>
+                        <div className="text-xs font-bold text-white leading-none whitespace-nowrap overflow-hidden text-ellipsis">{userProfile.fullName || 'Complete Profile'}</div>
+                        {userProfile.fullName && (
+                            <div className="text-[9px] text-slate-500 mt-1 font-medium leading-none whitespace-nowrap overflow-hidden text-ellipsis">
+                                {userProfile.email}
+                            </div>
+                        )}
+                    </div>
                 </button>
 
                 <div className="pt-4 flex flex-col items-center gap-1">
