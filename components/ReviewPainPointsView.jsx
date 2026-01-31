@@ -1,21 +1,21 @@
-import React from 'react';
 import { AlertTriangle, Trash2, Calendar, FileText, Activity, Lightbulb } from 'lucide-react';
+import ViewLayout from './ViewLayout';
 
 const ReviewPainPointsView = ({ painPoints, onDelete, setView }) => {
     return (
-        <div className="max-w-5xl mx-auto animate-in fade-in duration-500 space-y-8">
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 border-b pb-6 mb-12">
-                <div>
-                    <h2 className="text-3xl font-black text-slate-900 uppercase tracking-tight mb-2">Pain Point Registry</h2>
-                    <p className="text-slate-500 font-medium italic">Tracking system frictions and workflow bottlenecks</p>
-                </div>
+        <ViewLayout
+            title="Pain Point Registry"
+            description="Tracking system frictions and workflow bottlenecks"
+            maxWidthClass="max-w-5xl"
+            action={
                 <button
                     onClick={() => setView('painpoint_form')}
                     className="w-full md:w-auto h-[56px] flex items-center justify-center gap-2 bg-indigo-600 text-white px-8 rounded-2xl font-black hover:bg-indigo-700 shadow-lg shadow-indigo-100 transition-all active:scale-95 whitespace-nowrap"
                 >
                     <AlertTriangle size={20} /> New Pain Point
                 </button>
-            </div>
+            }
+        >
 
             {painPoints.length === 0 ? (
                 <div className="bg-white rounded-[2.5rem] p-20 text-center border-2 border-dashed border-slate-200">
@@ -84,7 +84,7 @@ const ReviewPainPointsView = ({ painPoints, onDelete, setView }) => {
                     ))}
                 </div>
             )}
-        </div>
+        </ViewLayout>
     );
 };
 

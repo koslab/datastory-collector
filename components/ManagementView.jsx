@@ -1,24 +1,24 @@
 import React, { useState } from 'react';
 import { Plus, FileText, Trash2, Edit3, Database } from 'lucide-react';
 import StarSchemaView from './StarSchemaView';
+import ViewLayout from './ViewLayout';
 
 const ManagementView = ({ stories, setView, setEditingId, setStep, startEditStory, setStories }) => {
     const [selectedStoryForSchema, setSelectedStoryForSchema] = useState(null);
 
     return (
-        <div className="animate-in fade-in duration-500 space-y-8">
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 border-b pb-6">
-                <div>
-                    <h2 className="text-3xl font-black text-slate-900 tracking-tight uppercase">Collected DataStories</h2>
-                    <p className="text-slate-500 mt-1 font-medium italic">Consolidated requirements for the Data Warehouse backlog.</p>
-                </div>
+        <ViewLayout
+            title="Collected DataStories"
+            description="Consolidated requirements for the Data Warehouse backlog."
+            action={
                 <button
                     onClick={() => { setEditingId(null); setView('wizard'); setStep(1); }}
                     className="w-full md:w-auto h-[56px] flex items-center justify-center gap-2 bg-indigo-600 text-white px-8 rounded-2xl font-black hover:bg-indigo-700 shadow-lg shadow-indigo-100 transition-all active:scale-95 whitespace-nowrap"
                 >
                     <Plus size={20} /> Capture New Story
                 </button>
-            </div>
+            }
+        >
 
             {stories.length === 0 ? (
                 <div className="py-24 text-center bg-white rounded-[3rem] border border-dashed border-slate-200">
@@ -103,7 +103,7 @@ const ManagementView = ({ stories, setView, setEditingId, setStep, startEditStor
                     onClose={() => setSelectedStoryForSchema(null)}
                 />
             )}
-        </div>
+        </ViewLayout>
     );
 };
 
