@@ -1,7 +1,7 @@
 import React from 'react';
-import { Database, Plus, ListFilter, CheckCircle2, History, BookOpen, Download, Grid, User } from 'lucide-react';
+import { Database, Plus, ListFilter, CheckCircle2, History, BookOpen, Download, Grid, User, AlertTriangle } from 'lucide-react';
 
-const Sidebar = ({ view, setView, stories, step, globalSuggestions, onViewYaml, userProfile, setShowProfileModal }) => {
+const Sidebar = ({ view, setView, stories, painPoints, step, globalSuggestions, onViewYaml, userProfile, setShowProfileModal }) => {
     return (
         <div className="w-full md:w-80 bg-slate-900 text-white p-10 flex flex-col shrink-0 shadow-2xl z-20 h-screen lg:h-auto lg:min-h-full overflow-y-auto lg:overflow-visible">
             <div className="mb-12">
@@ -13,11 +13,11 @@ const Sidebar = ({ view, setView, stories, step, globalSuggestions, onViewYaml, 
             </div>
 
             <div className="space-y-2 mb-10">
-                <button onClick={() => setView('wizard')} className={`w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ${view === 'wizard' ? 'bg-indigo-600 text-white shadow-xl shadow-indigo-600/30' : 'text-slate-500 hover:text-white hover:bg-white/5'}`}>
-                    <Plus size={18} /> New Story
-                </button>
                 <button onClick={() => setView('manage')} className={`w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ${view === 'manage' ? 'bg-indigo-600 text-white shadow-xl shadow-indigo-600/30' : 'text-slate-500 hover:text-white hover:bg-white/5'}`}>
-                    <ListFilter size={18} /> Review Collection ({stories.length})
+                    <ListFilter size={18} /> Data Stories ({stories.length})
+                </button>
+                <button onClick={() => setView('painpoint_review')} className={`w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ${view === 'painpoint_review' ? 'bg-indigo-600 text-white shadow-xl shadow-indigo-600/30' : 'text-slate-500 hover:text-white hover:bg-white/5'}`}>
+                    <AlertTriangle size={18} /> Pain Points ({painPoints.length})
                 </button>
             </div>
 

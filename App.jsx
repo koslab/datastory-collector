@@ -18,6 +18,8 @@ import LiveLogicPreview from './components/LiveLogicPreview';
 import UserProfileModal from './components/UserProfileModal';
 import YamlPreview from './components/YamlPreview';
 import EDWBusMatrix from './components/EDWBusMatrix';
+import PainPointForm from './components/PainPointForm';
+import ReviewPainPointsView from './components/ReviewPainPointsView';
 import config from './config.json';
 
 const App = () => {
@@ -31,6 +33,10 @@ const App = () => {
     const [showProfileModal, setShowProfileModal] = useState(false);
     const [yamlSource, setYamlSource] = useState('');
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [painPoints, setPainPoints] = useState(() => {
+        const saved = localStorage.getItem('datastory_pain_points');
+        return saved ? JSON.parse(saved) : [];
+    });
 
     const [globalSuggestions, setGlobalSuggestions] = useState(() => {
         const saved = localStorage.getItem('datastory_suggestions');
@@ -69,6 +75,10 @@ const App = () => {
     useEffect(() => {
         localStorage.setItem('datastory_user_profile', JSON.stringify(userProfile));
     }, [userProfile]);
+
+    useEffect(() => {
+        localStorage.setItem('datastory_pain_points', JSON.stringify(painPoints));
+    }, [painPoints]);
 
     useEffect(() => {
         if (stories.length === 0) {
@@ -242,6 +252,15 @@ ${s.granularity ? `      granularity: ${escape(s.granularity)}` : ''}
         setView('wizard');
     };
 
+    const savePainPoint = (painPoint) => {
+        setPainPoints([...painPoints, painPoint]);
+        setView('painpoint_review');
+    };
+
+    const deletePainPoint = (id) => {
+        setPainPoints(painPoints.filter(pp => pp.id !== id));
+    };
+
 
     const canProgress = () => {
         if (step === 2) return currentStory.metrics.length > 0;
@@ -286,6 +305,7 @@ ${s.granularity ? `      granularity: ${escape(s.granularity)}` : ''}
                     view={view}
                     setView={handleSetView}
                     stories={stories}
+                    painPoints={painPoints}
                     step={step}
                     globalSuggestions={globalSuggestions}
                     onViewYaml={() => { setView('yaml'); setIsSidebarOpen(false); }}
@@ -344,6 +364,17 @@ ${s.granularity ? `      granularity: ${escape(s.granularity)}` : ''}
                             <YamlPreview content={yamlSource} userProfile={userProfile} onClose={() => setView('manage')} />
                         ) : view === 'matrix' ? (
                             <EDWBusMatrix stories={stories} setView={setView} />
+                        ) : view === 'painpoint_form' ? (
+                            <PainPointForm
+                                onSave={savePainPoint}
+                                onCancel={() => setView('manage')}
+                            />
+                        ) : view === 'painpoint_review' ? (
+                            <ReviewPainPointsView
+                                painPoints={painPoints}
+                                onDelete={deletePainPoint}
+                                setView={setView}
+                            />
                         ) : (
                             <ManagementView
                                 stories={stories}
