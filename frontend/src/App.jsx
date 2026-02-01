@@ -46,7 +46,13 @@ const App = () => {
 
     const [userProfile, setUserProfile] = useState(() => {
         const saved = localStorage.getItem('datastory_user_profile');
-        return saved ? JSON.parse(saved) : { fullName: '', email: '', phone: '', role: '', department: '', company: '' };
+        const profile = saved ? JSON.parse(saved) : { fullName: '', email: '', phone: '', role: '', department: '', company: '' };
+
+        // Ensure sessionId exists
+        if (!profile.sessionId) {
+            profile.sessionId = crypto.randomUUID ? crypto.randomUUID() : `sess_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+        }
+        return profile;
     });
     const [currentStory, setCurrentStory] = useState({
         action: 'view an interactive dashboard',
@@ -81,7 +87,7 @@ const App = () => {
     }, [painPoints]);
 
     useEffect(() => {
-        if (stories.length === 0) {
+        if (stories.length === 0 && painPoints.length === 0) {
             setYamlSource('');
             return;
         }
@@ -103,68 +109,63 @@ const App = () => {
         const getIsoTimestamp = (str) => {
             if (!str) return '';
             try {
-                // Try standard Date constructor first
                 let date = new Date(str);
                 if (!isNaN(date.getTime())) return date.toISOString();
-
-                // Handle DD/MM/YYYY format commonly seen in locales
-                // Matches "19/01/2026, 22:56:52"
                 const ddmmyyyy = str.match(/^(\d{2})\/(\d{2})\/(\d{4}),\s*(\d{2}):(\d{2}):(\d{2})$/);
                 if (ddmmyyyy) {
                     const [_, day, month, year, hour, minute, second] = ddmmyyyy;
                     date = new Date(`${year}-${month}-${day}T${hour}:${minute}:${second}`);
                     if (!isNaN(date.getTime())) return date.toISOString();
                 }
-
                 return str;
             } catch (e) {
                 return str;
             }
         };
 
-        const grouped = stories.reduce((acc, s) => {
-            const key = `${s.userEmail || ''}|${s.submittedBy || ''}|${s.userRole || ''}`;
-            if (!acc[key]) {
-                acc[key] = {
-                    userRole: s.userRole,
-                    userName: s.submittedBy,
-                    userEmail: s.userEmail,
-                    userDepartment: s.userDepartment,
-                    stories: []
-                };
-            }
-            acc[key].stories.push(s);
-            return acc;
-        }, {});
+        let yamlContent = `sessionId: ${escape(userProfile.sessionId)}
+userName: ${escape(userProfile.fullName)}
+userEmail: ${escape(userProfile.email)}
+userRole: ${escape(userProfile.role)}
+userDepartment: ${escape(userProfile.department)}`;
 
-        const yamlContent = Object.values(grouped).map(u => {
-            return `- userName: ${escape(u.userName)}
-  userEmail: ${escape(u.userEmail)}
-  userRole: ${escape(u.userRole)}
-  userDepartment: ${escape(u.userDepartment)}
-  userStories:
-${u.stories.map(s => {
+        if (stories.length > 0) {
+            yamlContent += `
+userStories:
+${stories.map(s => {
                 const isoTime = getIsoTimestamp(s.timestamp);
-                // Don't escape if it's a valid ISO string to allow YAML timestamp type
                 const finalTime = isoTime !== s.timestamp || (isoTime.includes('T') && isoTime.endsWith('Z')) ? isoTime : escape(isoTime);
 
-                return `    - id: ${s.id}
-      action: ${escape(s.action)}
-      systemModules:${listItems(s.modules, '      ')}
-      metrics:${listItems(s.metrics, '      ')}
-      dimensions:${listItems(s.dimensions, '      ')}
-      filters:${listItems(s.filters, '      ')}
-      frequency: ${escape(s.frequency)}
-${s.granularity ? `      granularity: ${escape(s.granularity)}` : ''}
-      businessValue: ${escape(s.value)}
-      importance: ${escape(s.importance)}
-      sourceSystems:${listItems(s.sources, '      ')}
-      timestamp: ${finalTime}`;
+                return `  - id: ${s.id}
+    action: ${escape(s.action)}
+    systemModules:${listItems(s.modules, '    ')}
+    metrics:${listItems(s.metrics, '    ')}
+    dimensions:${listItems(s.dimensions, '    ')}
+    filters:${listItems(s.filters, '    ')}
+    frequency: ${escape(s.frequency)}
+${s.granularity ? `    granularity: ${escape(s.granularity)}` : ''}
+    businessValue: ${escape(s.value)}
+    importance: ${escape(s.importance)}
+    sourceSystems:${listItems(s.sources, '    ')}
+    timestamp: ${finalTime}`;
             }).join('\n')}`;
-        }).join('\n');
+        }
+
+        if (painPoints.length > 0) {
+            yamlContent += `
+userPainPoints:
+${painPoints.map(pp => {
+                return `  - id: ${pp.id}
+    title: ${escape(pp.title)}
+    description: ${escape(pp.description)}
+    impact: ${escape(pp.impact)}
+    suggestions: ${escape(pp.suggestions)}
+    timestamp: ${getIsoTimestamp(pp.timestamp)}`;
+            }).join('\n')}`;
+        }
 
         setYamlSource(yamlContent);
-    }, [stories]);
+    }, [stories, painPoints, userProfile, view]);
 
     useEffect(() => {
         const isComplete = userProfile.fullName && userProfile.email && userProfile.role;
@@ -221,6 +222,7 @@ ${s.granularity ? `      granularity: ${escape(s.granularity)}` : ''}
             setStories(stories.map(s => s.id === editingId ? {
                 ...currentStory,
                 id: editingId,
+                sessionId: userProfile.sessionId,
                 submittedBy: userProfile.fullName,
                 userRole: userProfile.role,
                 userEmail: userProfile.email,
@@ -232,6 +234,7 @@ ${s.granularity ? `      granularity: ${escape(s.granularity)}` : ''}
             setStories([...stories, {
                 ...currentStory,
                 id: Date.now(),
+                sessionId: userProfile.sessionId,
                 submittedBy: userProfile.fullName,
                 userRole: userProfile.role,
                 userEmail: userProfile.email,
@@ -253,7 +256,14 @@ ${s.granularity ? `      granularity: ${escape(s.granularity)}` : ''}
     };
 
     const savePainPoint = (painPoint) => {
-        setPainPoints([...painPoints, painPoint]);
+        setPainPoints([...painPoints, {
+            ...painPoint,
+            sessionId: userProfile.sessionId,
+            submittedBy: userProfile.fullName,
+            userRole: userProfile.role,
+            userEmail: userProfile.email,
+            userDepartment: userProfile.department
+        }]);
         setView('painpoint_review');
     };
 
