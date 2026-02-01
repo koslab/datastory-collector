@@ -19,6 +19,10 @@ RUN apt-get update && apt-get install -y nginx && \
 # Install uv
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
+LABEL org.opencontainers.image.source="https://github.com/koslab/datastory-collector"
+LABEL org.opencontainers.image.title="DataStory Collector"
+LABEL org.opencontainers.image.licenses="AGPL-3.0"
+
 WORKDIR /app
 
 # Copy project definition and lock file
