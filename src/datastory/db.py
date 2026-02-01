@@ -1,9 +1,10 @@
 from sqlmodel import SQLModel, create_engine, Session
 
-sqlite_file_name = "datastory.db"
-sqlite_url = f"sqlite:///{sqlite_file_name}"
+from datastory.config import settings
 
-connect_args = {"check_same_thread": False}
+sqlite_url = settings.database_url
+
+connect_args = {"check_same_thread": False} if sqlite_url.startswith("sqlite") else {}
 engine = create_engine(sqlite_url, echo=True, connect_args=connect_args)
 
 
