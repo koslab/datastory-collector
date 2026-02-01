@@ -5,6 +5,10 @@ const ViewLayout = ({
     description,
     action,
     children,
+    isEmpty = false,
+    emptyTitle = "No Items Found",
+    emptyDescription = "Get started by creating a new item.",
+    EmptyIcon = null,
     maxWidthClass = ""
 }) => {
     return (
@@ -26,7 +30,17 @@ const ViewLayout = ({
                     </div>
                 )}
             </div>
-            {children}
+            {isEmpty ? (
+                <div className="py-24 text-center bg-white rounded-[3rem] border border-dashed border-slate-200">
+                    {EmptyIcon && (
+                        <EmptyIcon className="mx-auto text-slate-200 mb-6" size={64} />
+                    )}
+                    <p className="text-slate-400 font-black text-xl tracking-tight uppercase">{emptyTitle}</p>
+                    {emptyDescription && (
+                        <p className="text-slate-400 mt-2 font-medium">{emptyDescription}</p>
+                    )}
+                </div>
+            ) : children}
         </div>
     );
 };
