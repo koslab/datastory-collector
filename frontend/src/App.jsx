@@ -23,7 +23,7 @@ import ReviewPainPointsView from './components/ReviewPainPointsView';
 import config from './config.json';
 
 const App = () => {
-    const [view, setView] = useState('wizard');
+    const [view, setView] = useState('manage');
     const [step, setStep] = useState(1);
     const [stories, setStories] = useState(() => {
         const saved = localStorage.getItem('datastory_stories');
@@ -409,7 +409,7 @@ ${painPoints.map(pp => {
             <UserProfileModal
                 profile={userProfile}
                 onChange={handleProfileChange}
-                onSave={() => setShowProfileModal(false)}
+                onSave={() => { setShowProfileModal(false); setView('manage'); }}
                 isOpen={showProfileModal}
             />
         </div>
