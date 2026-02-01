@@ -398,7 +398,7 @@ ${painPoints.map(pp => {
                         ) : view === 'painpoint_form' ? (
                             <PainPointForm
                                 onSave={savePainPoint}
-                                onCancel={() => { setEditingPainPointId(null); setView('manage'); }}
+                                onCancel={() => { setEditingPainPointId(null); setView('painpoint_review'); }}
                                 initialData={editingPainPointId ? painPoints.find(pp => pp.id === editingPainPointId) : null}
                             />
                         ) : view === 'painpoint_review' ? (
