@@ -30,6 +30,7 @@ const App = () => {
         return saved ? JSON.parse(saved) : [];
     });
     const [editingId, setEditingId] = useState(null);
+    const [editingPainPointId, setEditingPainPointId] = useState(null);
     const [showProfileModal, setShowProfileModal] = useState(false);
     const [yamlSource, setYamlSource] = useState('');
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -160,6 +161,7 @@ ${painPoints.map(pp => {
     description: ${escape(pp.description)}
     impact: ${escape(pp.impact)}
     suggestions: ${escape(pp.suggestions)}
+    importance: ${escape(pp.importance)}
     timestamp: ${getIsoTimestamp(pp.timestamp)}`;
             }).join('\n')}`;
         }
@@ -255,15 +257,34 @@ ${painPoints.map(pp => {
         setView('wizard');
     };
 
+    const startEditPainPoint = (painPoint) => {
+        setEditingPainPointId(painPoint.id);
+        setView('painpoint_form');
+    };
+
     const savePainPoint = (painPoint) => {
-        setPainPoints([...painPoints, {
-            ...painPoint,
-            sessionId: userProfile.sessionId,
-            submittedBy: userProfile.fullName,
-            userRole: userProfile.role,
-            userEmail: userProfile.email,
-            userDepartment: userProfile.department
-        }]);
+        if (editingPainPointId) {
+            setPainPoints(painPoints.map(pp => pp.id === editingPainPointId ? {
+                ...painPoint,
+                id: editingPainPointId,
+                sessionId: userProfile.sessionId,
+                submittedBy: userProfile.fullName,
+                userRole: userProfile.role,
+                userEmail: userProfile.email,
+                userDepartment: userProfile.department,
+                timestamp: new Date().toISOString()
+            } : pp));
+            setEditingPainPointId(null);
+        } else {
+            setPainPoints([...painPoints, {
+                ...painPoint,
+                sessionId: userProfile.sessionId,
+                submittedBy: userProfile.fullName,
+                userRole: userProfile.role,
+                userEmail: userProfile.email,
+                userDepartment: userProfile.department
+            }]);
+        }
         setView('painpoint_review');
     };
 
@@ -377,12 +398,14 @@ ${painPoints.map(pp => {
                         ) : view === 'painpoint_form' ? (
                             <PainPointForm
                                 onSave={savePainPoint}
-                                onCancel={() => setView('manage')}
+                                onCancel={() => { setEditingPainPointId(null); setView('manage'); }}
+                                initialData={editingPainPointId ? painPoints.find(pp => pp.id === editingPainPointId) : null}
                             />
                         ) : view === 'painpoint_review' ? (
                             <ReviewPainPointsView
                                 painPoints={painPoints}
                                 onDelete={deletePainPoint}
+                                onEdit={startEditPainPoint}
                                 setView={setView}
                             />
                         ) : (

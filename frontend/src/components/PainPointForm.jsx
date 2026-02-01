@@ -1,13 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AlertTriangle, Send, X } from 'lucide-react';
+import StarRating from './StarRating';
 
-const PainPointForm = ({ onSave, onCancel }) => {
+const PainPointForm = ({ onSave, onCancel, initialData }) => {
     const [formData, setFormData] = useState({
         title: '',
         description: '',
         impact: '',
-        suggestions: ''
+        suggestions: '',
+        importance: 0
     });
+
+    useEffect(() => {
+        if (initialData) {
+            setFormData({
+                importance: 0,
+                ...initialData
+            });
+        }
+    }, [initialData]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -44,11 +55,21 @@ const PainPointForm = ({ onSave, onCancel }) => {
                         />
                     </div>
 
+                    <div className="space-y-4">
+                        <StarRating
+                            value={formData.importance || 0}
+                            onChange={(rating) => setFormData({ ...formData, importance: rating })}
+                            label="Operational Dependency (1-5)"
+                            description=""
+                            size={24}
+                        />
+                    </div>
+
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Existing Approach / System</label>
+                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Issue Description</label>
                         <textarea
                             required
-                            placeholder="What are you using / doing now?"
+                            placeholder="Please describe the specific issue, bottleneck, or inefficiency you are encountering..."
                             className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-6 py-4 text-sm font-bold focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none min-h-[100px]"
                             value={formData.description}
                             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -56,10 +77,10 @@ const PainPointForm = ({ onSave, onCancel }) => {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Impact & Friction</label>
+                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Impact of the Issue</label>
                         <textarea
                             required
-                            placeholder="How does this slow you down or cause problems?"
+                            placeholder="How does this issue affect your workflow, productivity, or decision-making process?"
                             className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-6 py-4 text-sm font-bold focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none min-h-[100px]"
                             value={formData.impact}
                             onChange={(e) => setFormData({ ...formData, impact: e.target.value })}
@@ -67,9 +88,9 @@ const PainPointForm = ({ onSave, onCancel }) => {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Suggested Improvements</label>
+                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Suggested Fix</label>
                         <textarea
-                            placeholder="What would make this better?"
+                            placeholder="What solution or improvement do you recommend to resolve this issue?"
                             className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-6 py-4 text-sm font-bold focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none min-h-[100px]"
                             value={formData.suggestions}
                             onChange={(e) => setFormData({ ...formData, suggestions: e.target.value })}
@@ -89,11 +110,11 @@ const PainPointForm = ({ onSave, onCancel }) => {
                         type="submit"
                         className="flex-[2] flex items-center justify-center gap-3 py-4 bg-indigo-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-indigo-700 transition-all active:scale-95 shadow-lg shadow-indigo-600/30"
                     >
-                        <Send size={18} /> Save Pain Point
+                        <Send size={18} /> {initialData ? 'Update Pain Point' : 'Save Pain Point'}
                     </button>
                 </div>
-            </form>
-        </div>
+            </form >
+        </div >
     );
 };
 

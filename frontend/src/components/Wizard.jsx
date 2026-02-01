@@ -1,6 +1,7 @@
 import React from 'react';
-import { CheckCircle2, Star } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 import MultiInput from './MultiInput';
+import StarRating from './StarRating';
 
 const Wizard = ({
     step,
@@ -129,41 +130,13 @@ const Wizard = ({
                             <textarea className="w-full px-4 py-3 border rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 h-32 font-medium leading-relaxed" placeholder="Briefly explain: I can use this to [action] which will result in [benefit]..." value={currentStory.value} onChange={(e) => setCurrentStory({ ...currentStory, value: e.target.value })} />
                         </div>
                         <div className="space-y-4">
-                            <div className="space-y-1">
-                                <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Operational Dependency</label>
-                                <p className="text-[10px] text-slate-400 font-medium italic">How critical is this data to your daily work?</p>
-                            </div>
-                            <div className="flex flex-col gap-2">
-                                <div className="flex gap-2">
-                                    {[1, 2, 3, 4, 5].map((rating) => (
-                                        <button
-                                            key={rating}
-                                            onClick={() => setCurrentStory({ ...currentStory, importance: rating })}
-                                            onMouseEnter={() => setCurrentStory(prev => ({ ...prev, _tempImportance: rating }))}
-                                            onMouseLeave={() => setCurrentStory(prev => {
-                                                const { _tempImportance, ...rest } = prev;
-                                                return rest;
-                                            })}
-                                            className="focus:outline-none transition-transform hover:scale-110"
-                                        >
-                                            <Star
-                                                size={32}
-                                                className={`transition-colors ${(currentStory._tempImportance || currentStory.importance) >= rating
-                                                    ? 'fill-amber-400 text-amber-400'
-                                                    : 'fill-slate-100 text-slate-200'
-                                                    }`}
-                                            />
-                                        </button>
-                                    ))}
-                                </div>
-                                <div className="text-sm font-bold text-slate-600 h-5">
-                                    {(currentStory._tempImportance || currentStory.importance) === 1 && "Minimal - Informational only"}
-                                    {(currentStory._tempImportance || currentStory.importance) === 2 && "Low - Convenient but optional"}
-                                    {(currentStory._tempImportance || currentStory.importance) === 3 && "Medium - Improves efficiency"}
-                                    {(currentStory._tempImportance || currentStory.importance) === 4 && "High - Key performance driver"}
-                                    {(currentStory._tempImportance || currentStory.importance) === 5 && "Critical - Essential for operations"}
-                                </div>
-                            </div>
+                            <StarRating
+                                value={currentStory.importance || 0}
+                                onChange={(rating) => setCurrentStory({ ...currentStory, importance: rating })}
+                                label="Operational Dependency"
+                                description="How critical is this data to your daily work?"
+                                size={32}
+                            />
                         </div>
                     </div>
                 </div>

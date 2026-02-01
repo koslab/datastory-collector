@@ -1,7 +1,8 @@
-import { AlertTriangle, Trash2, Calendar, FileText, Activity, Lightbulb } from 'lucide-react';
+import { AlertTriangle, Trash2, Calendar, FileText, Activity, Lightbulb, Edit3 } from 'lucide-react';
 import ViewLayout from './ViewLayout';
+import StarRating from './StarRating';
 
-const ReviewPainPointsView = ({ painPoints, onDelete, setView }) => {
+const ReviewPainPointsView = ({ painPoints, onDelete, onEdit, setView }) => {
     return (
         <ViewLayout
             title="Pain Point Registry"
@@ -23,26 +24,47 @@ const ReviewPainPointsView = ({ painPoints, onDelete, setView }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {painPoints.map((pp) => (
                     <div key={pp.id} className="bg-white rounded-[2.5rem] p-8 shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col relative group">
-                        <button
-                            onClick={() => onDelete(pp.id)}
-                            className="absolute top-6 right-6 p-3 text-slate-300 hover:text-rose-500 hover:bg-rose-50 transition-all rounded-xl outline-none"
-                            title="Delete Pain Point"
-                        >
-                            <Trash2 size={18} />
-                        </button>
+                        <div className="absolute top-6 right-6 flex gap-2">
+                            <button
+                                onClick={() => onEdit(pp)}
+                                className="p-3 text-slate-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all rounded-xl outline-none"
+                                title="Edit Pain Point"
+                            >
+                                <Edit3 size={18} />
+                            </button>
+                            <button
+                                onClick={() => onDelete(pp.id)}
+                                className="p-3 text-slate-300 hover:text-rose-500 hover:bg-rose-50 transition-all rounded-xl outline-none"
+                                title="Delete Pain Point"
+                            >
+                                <Trash2 size={18} />
+                            </button>
+                        </div>
 
                         <div className="flex items-center gap-3 text-indigo-600 mb-6">
                             <AlertTriangle size={20} />
                             <span className="text-[10px] font-black uppercase tracking-[0.2em]">Pain Point #{pp.id.toString().slice(-4)}</span>
                         </div>
 
-                        <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight mb-6 pr-10">{pp.title}</h3>
+                        <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight mb-2 pr-20">{pp.title}</h3>
+
+                        {/* Star Rating Display */}
+                        <div className="mb-6">
+                            <StarRating
+                                value={pp.importance || 0}
+                                readOnly={true}
+                                showLabels={false}
+                                size={16}
+                                label=""
+                                description=""
+                            />
+                        </div>
 
                         <div className="space-y-6 flex-1">
                             <div className="space-y-2">
                                 <div className="flex items-center gap-2 text-slate-400">
                                     <FileText size={14} />
-                                    <span className="text-[10px] font-black uppercase tracking-widest">Existing Approach</span>
+                                    <span className="text-[10px] font-black uppercase tracking-widest">Issue Description</span>
                                 </div>
                                 <p className="text-sm font-bold text-slate-600 leading-relaxed bg-slate-50 p-4 rounded-2xl border border-slate-100">{pp.description}</p>
                             </div>
@@ -50,7 +72,7 @@ const ReviewPainPointsView = ({ painPoints, onDelete, setView }) => {
                             <div className="space-y-2">
                                 <div className="flex items-center gap-2 text-rose-400">
                                     <Activity size={14} />
-                                    <span className="text-[10px] font-black uppercase tracking-widest">Impact</span>
+                                    <span className="text-[10px] font-black uppercase tracking-widest">Impact of the Issue</span>
                                 </div>
                                 <p className="text-sm font-bold text-slate-600 leading-relaxed bg-rose-50/50 p-4 rounded-2xl border border-rose-100/50">{pp.impact}</p>
                             </div>
