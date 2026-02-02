@@ -1,7 +1,5 @@
 import argparse
 import uvicorn
-import os
-from datastory.build import build_frontend
 
 
 def main():
@@ -15,12 +13,6 @@ def main():
     args = parser.parse_args()
 
     if args.command == "serve":
-        # Build on initial start
-        build_frontend()
-        
-        # Signal to the app to rebuild on uvicorn reloads
-        os.environ["DATASTORY_REBUILD_FRONTEND"] = "1"
-        
         uvicorn.run("datastory.main:app", host=args.host, port=args.port, reload=True)
     else:
         parser.print_help()

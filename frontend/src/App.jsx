@@ -19,11 +19,13 @@ import UserProfileModal from './components/UserProfileModal';
 import YamlPreview from './components/YamlPreview';
 import EDWBusMatrix from './components/EDWBusMatrix';
 import PainPointForm from './components/PainPointForm';
-import ReviewPainPointsView from './components/ReviewPainPointsView';
 import config from './config.json';
+import { fetchConfig } from './api';
 
 const App = () => {
     const [view, setView] = useState('manage');
+    const [configData, setConfigData] = useState(config);
+    const [isConfigLoading, setIsConfigLoading] = useState(true);
     const [step, setStep] = useState(1);
     const [stories, setStories] = useState(() => {
         const saved = localStorage.getItem('datastory_stories');
@@ -41,8 +43,7 @@ const App = () => {
 
     const [globalSuggestions, setGlobalSuggestions] = useState(() => {
         const saved = localStorage.getItem('datastory_suggestions');
-        const defaultValue = config;
-        return saved ? JSON.parse(saved) : defaultValue;
+        return saved ? JSON.parse(saved) : config;
     });
 
     const [userProfile, setUserProfile] = useState(() => {
@@ -174,6 +175,28 @@ ${painPoints.map(pp => {
         if (!isComplete) {
             setShowProfileModal(true);
         }
+    }, []);
+
+    // Fetch config from backend
+    useEffect(() => {
+        const loadConfig = async () => {
+            try {
+                const data = await fetchConfig();
+                setConfigData(data);
+
+                // Update global suggestions if they haven't been customized by user yet
+                const saved = localStorage.getItem('datastory_suggestions');
+                if (!saved) {
+                    setGlobalSuggestions(data);
+                }
+            } catch (error) {
+                console.error('Failed to load config:', error);
+            } finally {
+                setIsConfigLoading(false);
+            }
+        };
+
+        loadConfig();
     }, []);
 
     const handleProfileChange = (e) => setUserProfile({ ...userProfile, [e.target.name]: e.target.value });
@@ -350,10 +373,10 @@ ${painPoints.map(pp => {
 
                     <div className="max-w-5xl mx-auto w-full">
                         {/* Branding Logo */}
-                        {config.branding?.logo && (
+                        {configData.branding?.logo && (
                             <div className="mb-12 flex justify-start">
                                 <img
-                                    src={config.branding.logo}
+                                    src={configData.branding.logo}
                                     alt="Branding Logo"
                                     className="max-h-12 object-contain"
                                 />
@@ -379,7 +402,7 @@ ${painPoints.map(pp => {
                                     addItem={addItem}
                                     removeItem={removeItem}
                                     globalSuggestions={globalSuggestions}
-                                    config={config}
+                                    config={configData}
                                     saveStory={saveStory}
                                     editingId={editingId}
                                 />
@@ -435,6 +458,14 @@ ${painPoints.map(pp => {
                 onSave={() => { setShowProfileModal(false); setView('manage'); }}
                 isOpen={showProfileModal}
             />
+            {isConfigLoading && (
+                <div className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-[100] flex items-center justify-center">
+                    <div className="bg-white p-8 rounded-[2.5rem] shadow-2xl flex flex-col items-center gap-4">
+                        <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+                        <p className="font-black text-xs uppercase tracking-widest text-slate-400">Loading Configuration...</p>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
