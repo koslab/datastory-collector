@@ -1,5 +1,5 @@
 import React from 'react';
-import { Database, Plus, ListFilter, CheckCircle2, History, BookOpen, Download, Grid, User, AlertTriangle, Trash2 } from 'lucide-react';
+import { Database, Plus, ListFilter, CheckCircle2, History, BookOpen, Download, Grid, User, AlertTriangle, Trash2, Github } from 'lucide-react';
 
 const Sidebar = ({ view, setView, stories, painPoints, step, globalSuggestions, onViewYaml, userProfile, setShowProfileModal, setShowResetModal }) => {
     return (
@@ -105,10 +105,13 @@ const Sidebar = ({ view, setView, stories, painPoints, step, globalSuggestions, 
                     <a href="https://kagesenshi.org" target="_blank" rel="noopener noreferrer" className="text-[10px] font-bold tracking-widest text-slate-600 hover:text-indigo-400 transition-colors">
                         (c) kagesenshi.org
                     </a>
-                    <div className="text-[10px] font-bold tracking-widest text-slate-600 flex items-center gap-1">
+                    <div className="text-[10px] font-bold tracking-widest text-slate-600 flex items-center gap-2">
                         <span>Licensed under</span>
                         <a href="https://www.gnu.org/licenses/agpl-3.0.en.html#license-text" target="_blank" rel="noopener noreferrer" className="hover:text-indigo-400 transition-colors">
                             AGPL v3
+                        </a>
+                        <a href="https://github.com/koslab/datastory-collector" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors ml-1">
+                            <Github size={14} />
                         </a>
                     </div>
                 </div>
