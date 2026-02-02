@@ -59,6 +59,9 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /app/data
+            - name: config
+              mountPath: /app/config.json
+              subPath: config.json
       volumes:
         - name: data
           {{- if .Values.persistence.enabled }}
@@ -67,6 +70,9 @@ spec:
           {{- else }}
           emptyDir: {}
           {{- end }}
+        - name: config
+          configMap:
+            name: {{ include "datastory-collector.fullname" . }}-config
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

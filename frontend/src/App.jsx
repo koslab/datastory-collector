@@ -21,6 +21,7 @@ import EDWBusMatrix from './components/EDWBusMatrix';
 import PainPointForm from './components/PainPointForm';
 import config from './config.json';
 import { fetchConfig } from './api';
+import ReviewPainPointsView from './components/ReviewPainPointsView';
 
 const App = () => {
     const [view, setView] = useState('manage');
