@@ -1,0 +1,8 @@
+apiVersion: v2
+name: datastory-collector
+description: A Helm chart for DataStory Collector
+type: application
+version: 0.1.1
+appVersion: "1.0.0"
+
+# No external dependencies to avoid pulling issues
