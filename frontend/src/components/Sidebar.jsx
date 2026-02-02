@@ -70,7 +70,6 @@ const Sidebar = ({ view, setView, stories, painPoints, step, globalSuggestions, 
 
                 <button
                     onClick={onViewYaml}
-                    disabled={stories.length === 0}
                     className="w-full flex items-center justify-center gap-3 py-4 bg-emerald-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest transition-all disabled:opacity-20 disabled:grayscale hover:bg-emerald-700 active:scale-95 shadow-lg shadow-emerald-900/20"
                 >
                     <Download size={18} /> View YAML

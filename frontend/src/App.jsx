@@ -92,11 +92,6 @@ const App = () => {
     }, [painPoints]);
 
     useEffect(() => {
-        if (stories.length === 0 && painPoints.length === 0) {
-            setYamlSource('');
-            return;
-        }
-
         const escape = (str) => {
             if (!str) return '""';
             const s = str.toString();
