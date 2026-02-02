@@ -1,7 +1,7 @@
 import React from 'react';
-import { Database, Plus, ListFilter, CheckCircle2, History, BookOpen, Download, Grid, User, AlertTriangle } from 'lucide-react';
+import { Database, Plus, ListFilter, CheckCircle2, History, BookOpen, Download, Grid, User, AlertTriangle, Trash2 } from 'lucide-react';
 
-const Sidebar = ({ view, setView, stories, painPoints, step, globalSuggestions, onViewYaml, userProfile, setShowProfileModal }) => {
+const Sidebar = ({ view, setView, stories, painPoints, step, globalSuggestions, onViewYaml, userProfile, setShowProfileModal, setShowResetModal }) => {
     return (
         <div className="w-full md:w-80 bg-slate-900 text-white p-10 flex flex-col shrink-0 shadow-2xl z-20 h-screen lg:h-auto lg:min-h-full overflow-y-auto lg:overflow-visible">
             <div className="mb-12">
@@ -92,6 +92,13 @@ const Sidebar = ({ view, setView, stories, painPoints, step, globalSuggestions, 
                             </div>
                         )}
                     </div>
+                </button>
+
+                <button
+                    onClick={() => setShowResetModal(true)}
+                    className="w-full flex items-center justify-center gap-3 py-3 bg-red-600/10 border border-red-600/20 text-red-500 rounded-2xl font-black text-xs uppercase tracking-widest transition-all hover:bg-red-600 hover:text-white active:scale-95 mt-2"
+                >
+                    <Trash2 size={16} /> Reset
                 </button>
 
                 <div className="pt-4 flex flex-col items-center gap-1">

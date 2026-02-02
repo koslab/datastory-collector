@@ -22,6 +22,7 @@ import PainPointForm from './components/PainPointForm';
 // import config from './config.json';
 import { fetchConfig } from './api';
 import ReviewPainPointsView from './components/ReviewPainPointsView';
+import ResetConfirmationModal from './components/ResetConfirmationModal';
 
 const App = () => {
     const [view, setView] = useState('manage');
@@ -35,6 +36,7 @@ const App = () => {
     const [editingId, setEditingId] = useState(null);
     const [editingPainPointId, setEditingPainPointId] = useState(null);
     const [showProfileModal, setShowProfileModal] = useState(false);
+    const [showResetModal, setShowResetModal] = useState(false);
     const [yamlSource, setYamlSource] = useState('');
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [painPoints, setPainPoints] = useState(() => {
@@ -342,6 +344,11 @@ ${painPoints.map(pp => {
         setIsSidebarOpen(false);
     };
 
+    const handleReset = () => {
+        localStorage.clear();
+        window.location.reload();
+    };
+
     return (
         <div className="min-h-screen bg-slate-50 flex flex-col lg:flex-row font-sans text-slate-900 selection:bg-indigo-100 selection:text-indigo-900 relative">
 
@@ -379,6 +386,7 @@ ${painPoints.map(pp => {
                     onViewYaml={() => { setView('yaml'); setIsSidebarOpen(false); }}
                     userProfile={userProfile}
                     setShowProfileModal={setShowProfileModal}
+                    setShowResetModal={setShowResetModal}
                 />
             </div>
 
@@ -471,6 +479,11 @@ ${painPoints.map(pp => {
                 onChange={handleProfileChange}
                 onSave={() => { setShowProfileModal(false); setView('manage'); }}
                 isOpen={showProfileModal}
+            />
+            <ResetConfirmationModal
+                isOpen={showResetModal}
+                onConfirm={handleReset}
+                onCancel={() => setShowResetModal(false)}
             />
             {isConfigLoading && (
                 <div className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-[100] flex items-center justify-center">
