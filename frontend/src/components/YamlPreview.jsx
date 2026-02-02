@@ -4,14 +4,17 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { materialOceanic } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { submitStory } from '../api';
 import yaml from 'js-yaml';
+import SubmitConfirmationModal from './SubmitConfirmationModal';
 
 const YamlPreview = ({ content, onClose, userProfile }) => {
     const [copied, setCopied] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [submitted, setSubmitted] = useState(false);
     const [error, setError] = useState(null);
+    const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
 
     const handleSubmit = async () => {
+        setIsSubmitModalOpen(false);
         setSubmitting(true);
         setError(null);
         try {
@@ -77,7 +80,7 @@ ${content}`;
             <div className="relative group">
                 <div className="absolute right-4 top-4 z-10 flex gap-2">
                     <button
-                        onClick={handleSubmit}
+                        onClick={() => setIsSubmitModalOpen(true)}
                         disabled={submitting || submitted}
                         className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest shadow-lg transition-all ${submitted
                             ? 'bg-emerald-500 text-white'
@@ -142,6 +145,13 @@ ${content}`;
                     Use this YAML content to import into other tools or version control systems.
                 </p>
             </div>
+
+            <SubmitConfirmationModal
+                isOpen={isSubmitModalOpen}
+                onConfirm={handleSubmit}
+                onCancel={() => setIsSubmitModalOpen(false)}
+                isSubmitting={submitting}
+            />
         </div>
     );
 };
