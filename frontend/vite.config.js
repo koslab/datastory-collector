@@ -6,7 +6,9 @@ import runtimeEnv from 'vite-plugin-runtime-env'
 export default defineConfig({
     plugins: [
         react(),
-        runtimeEnv(),
+        runtimeEnv({
+            injectHtml: false,
+        }),
     ],
     base: './', // Ensure assets are relative for GitHub Pages
 })

@@ -35,7 +35,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: 8000
+              containerPort: 80
               protocol: TCP
           env:
             - name: DATASTORY_DATABASE_URL
@@ -44,13 +44,13 @@ spec:
               value: {{ .Values.config.rebuildFrontend | quote }}
           livenessProbe:
             httpGet:
-              path: /static/index.html
+              path: /
               port: http
             initialDelaySeconds: 15
             periodSeconds: 20
           readinessProbe:
             httpGet:
-              path: /static/index.html
+              path: /
               port: http
             initialDelaySeconds: 5
             periodSeconds: 10
