@@ -19,13 +19,13 @@ import UserProfileModal from './components/UserProfileModal';
 import YamlPreview from './components/YamlPreview';
 import EDWBusMatrix from './components/EDWBusMatrix';
 import PainPointForm from './components/PainPointForm';
-import config from './config.json';
+// import config from './config.json';
 import { fetchConfig } from './api';
 import ReviewPainPointsView from './components/ReviewPainPointsView';
 
 const App = () => {
     const [view, setView] = useState('manage');
-    const [configData, setConfigData] = useState(config);
+    const [configData, setConfigData] = useState({ actions: [], metrics: [], dimensions: [], sources: [], modules: [] });
     const [isConfigLoading, setIsConfigLoading] = useState(true);
     const [step, setStep] = useState(1);
     const [stories, setStories] = useState(() => {
@@ -44,7 +44,7 @@ const App = () => {
 
     const [globalSuggestions, setGlobalSuggestions] = useState(() => {
         const saved = localStorage.getItem('datastory_suggestions');
-        return saved ? JSON.parse(saved) : config;
+        return saved ? JSON.parse(saved) : { metrics: [], dimensions: [], sources: [] };
     });
 
     const [userProfile, setUserProfile] = useState(() => {
@@ -185,11 +185,24 @@ ${painPoints.map(pp => {
                 const data = await fetchConfig();
                 setConfigData(data);
 
-                // Update global suggestions if they haven't been customized by user yet
-                const saved = localStorage.getItem('datastory_suggestions');
-                if (!saved) {
-                    setGlobalSuggestions(data);
-                }
+                // Update global suggestions with backend data, merging with existing ones
+                setGlobalSuggestions(prev => {
+                    const updated = { ...prev };
+
+                    // Merge metrics
+                    const backendMetrics = data.metrics || [];
+                    updated.metrics = Array.from(new Set([...(prev.metrics || []), ...backendMetrics])).sort();
+
+                    // Merge dimensions
+                    const backendDimensions = data.dimensions || [];
+                    updated.dimensions = Array.from(new Set([...(prev.dimensions || []), ...backendDimensions])).sort();
+
+                    // Merge sources
+                    const backendSources = data.sources || [];
+                    updated.sources = Array.from(new Set([...(prev.sources || []), ...backendSources])).sort();
+
+                    return updated;
+                });
             } catch (error) {
                 console.error('Failed to load config:', error);
             } finally {

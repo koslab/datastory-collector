@@ -20,10 +20,8 @@ def on_startup():
 
 
 from datastory.service.submission.views import router as submission_router
-from datastory.service.config.views import router as config_router
 
 app.include_router(submission_router, prefix="/api/v1")
-app.include_router(config_router, prefix="/api/v1")
 
 
 @app.get("/")

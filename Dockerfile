@@ -42,10 +42,7 @@ COPY start.sh ./
 # Make start script executable
 RUN chmod +x start.sh
 
-ADD frontend/src/config.json /app/config.json
-
 # Environment variables
-ENV DATASTORY_CONFIG_JSON_PATH="/app/config.json"
 ENV VITE_API_BASE_URL="/api/v1"
 
 # Expose ports

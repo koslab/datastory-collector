@@ -3,7 +3,6 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     database_url: str = "sqlite:///datastory.db"
-    config_json_path: str = "config.json"
     api_base_url: str = "/api/v1"
 
     model_config = SettingsConfigDict(
