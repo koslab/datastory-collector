@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Plus, FileText, Trash2, Edit3, Database } from 'lucide-react';
+import { Plus, FileText, Trash2, Edit3, Database, Calendar } from 'lucide-react';
 import StarSchemaView from './StarSchemaView';
 import ViewLayout from './ViewLayout';
+import StarRating from './StarRating';
 
 const ManagementView = ({ stories, setView, setEditingId, setStep, startEditStory, setStories }) => {
     const [selectedStoryForSchema, setSelectedStoryForSchema] = useState(null);
@@ -35,6 +36,18 @@ const ManagementView = ({ stories, setView, setEditingId, setStep, startEditStor
 
                             {/* Content */}
                             <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2 mb-1.5">
+                                    <span className="text-[9px] font-black uppercase tracking-widest text-indigo-600">#{s.id.toString().slice(-4)}</span>
+                                    <span className="text-slate-300">•</span>
+                                    <StarRating
+                                        value={s.importance || 0}
+                                        readOnly={true}
+                                        showLabels={false}
+                                        size={12}
+                                        label=""
+                                        description=""
+                                    />
+                                </div>
                                 <div className="text-base leading-snug font-medium text-slate-500 font-sans">
                                     <span>As a </span>
                                     <span className="text-slate-900 font-bold">{s.userRole}</span>
